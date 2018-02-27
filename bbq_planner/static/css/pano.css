@@ -102,10 +102,18 @@ body {
 
 .pano-title {
     font-size: 100px;
-    padding-bottom: 150px
+    padding-bottom: 250px;
 }
 
 .pano-quote {
     font-size: 45px;
-    padding-bottom: 100px
+    padding-bottom: 100px;
+}
+
+.marketing {
+  padding-top: 100px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
