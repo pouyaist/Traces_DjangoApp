@@ -1,0 +1,48 @@
+{% extends "includes/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container-fluid" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+    {% if form.errors %}
+    <div class="alert alert-danger">Your username and password didn't match. Please try again.</div>
+    {% endif %}
+
+    <div id="login-overlay" class="modal-dialog">
+        <div class="login-form">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Login to BBQ Planner</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="well">
+                            <form id="loginForm" method="POST" action="{% url 'login' %}" novalidate="novalidate">
+                                {% csrf_token %}
+                                <div class="form-pano">
+                                    <label class="control-label">{{ form.username.label_tag }}</label>
+                                    {{ form.username }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-pano">
+                                    <label class="control-label">{{ form.password.label_tag }}</label>
+                                    <input type="password" name="password" required="" id="id_password">
+                                    <span class="help-block"></span>
+                                </div>
+                                {# Assumes you setup the password_reset view in your URLconf #}
+                                <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+                                <div id="loginErrorMsg" class="alert alert-error hide">Wrong username or password</div>
+                                <button type="submit" class="btn btn-success btn-block">Login</button>
+                                <a href="{% url 'register'%}" class="btn btn-default btn-block">Register</a>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+</div>
+{% endblock %}

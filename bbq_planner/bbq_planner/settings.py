@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user.apps.UserConfig',
-    'event.apps.EventConfig'
+    'event.apps.EventConfig',
+    'social_django',
+    'social.apps.django_app.default',
+    'rest_framework.authtoken',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'bbq_planner.urls'
@@ -56,7 +61,7 @@ ROOT_URLCONF = 'bbq_planner.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # <--
+                'social_django.context_processors.login_redirect',  # <--
             ],
         },
     },
@@ -115,8 +122,76 @@ USE_L10N = True
 
 USE_TZ = True
 
+## REST FRAMEWORK settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/user/dashboard/'
+LOGIN_URL = '/accounts/login'
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/user/dashboard/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/user/dashboard/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/user/register/'
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
+# Pipeline for Social Auth App
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+    'user.pipeline.save_profile'
+)
+
+# Constans for Authentication - To be moved to files or system variables later on
+# Facebook
+SOCIAL_AUTH_FACEBOOK_KEY = '1609004615801159'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'dc4ffb6e49cf08a23d575504faf5e0a8'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'public_profile', 'user_location']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'locale': 'en_US',
+    'fields': 'id, name, email, age_range, about, picture, location'
+}
+SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
+
+# Twitter
+SOCIAL_AUTH_TWITTER_KEY = 'w9FMFt4ALaK7FdKdszGpE0x9A'
+SOCIAL_AUTH_TWITTER_SECRET = '8m51g8W9DAnUsa1rIMkz2EOdAH2wUNrBcKYR2aCyOmeneRfKDo'
+
+# Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '6310791947-ntir5rkhmke0do46t01c5i72rhdjsnir.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'YH7mlS3f4_JxpyYaOyFkuIaZ'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email',
+                                   'https://www.googleapis.com/auth/userinfo.profile',
+                                   'https://www.googleapis.com/auth/user.addresses.read']

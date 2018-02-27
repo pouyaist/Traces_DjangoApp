@@ -1,0 +1,95 @@
+{% extends "includes/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    {% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+    {% endif %}
+
+    <div id="login-overlay" class="modal-dialog">
+        <div class="login-form">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Register to Panotraces</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="well">
+                            {% if error_form.errors %}
+                            <form id="registrationFormError" method="get" action="{% url 'register' %}"
+                                  class="registrationForm">
+                                {% csrf_token %}
+                                {% for field in error_form %}
+                                {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                                {% endfor %}
+                                {% endfor %}
+                                <button type="submit" value="back" class="btn btn-success btn-block">Back</button>
+                            </form>
+                            {% else %}
+                            <form id="registrationForm" method="post" action="{% url 'register' %}"
+                                  class="registrationForm">
+                                {% csrf_token %}
+                                <div class="form-pano">
+                                    <label class="control-label">{{ user_auth_form.username.label_tag }}</label>
+                                    {{ user_auth_form.username }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="pano-password form-pano">
+                                    <label class="control-label">{{ user_auth_form.password.label_tag }}</label>
+
+                                    <input type="password" name="password" required="" id="id_password" maxlength="128">
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-pano">
+                                    <label class="control-label">{{ user_auth_form.email.label_tag }}</label>
+                                    {{ user_auth_form.email }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-pano">
+                                    <label class="control-label">{{ user_auth_form.first_name.label_tag }}</label>
+                                    {{ user_auth_form.first_name }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-pano">
+                                    <label class="control-label">{{ user_auth_form.last_name.label_tag }}</label>
+                                    {{ user_auth_form.last_name }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-pano">
+                                    <label class="control-label">{{ user_extended_form.city.label_tag }}</label>
+                                    {{ user_extended_form.city }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-pano">
+                                    <label class="control-label">{{ user_extended_form.phone.label_tag }}</label>
+                                    {{ user_extended_form.phone }}
+                                    <span class="help-block"></span>
+                                </div>
+                                <button type="submit" value="register" class="btn btn-success btn-block">Register
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</div>
+{% endblock %}
