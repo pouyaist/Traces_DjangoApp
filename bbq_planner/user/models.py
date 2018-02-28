@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from food.models import FoodOrder
-from event.models import Event
-
 
 
 class UserProfile(models.Model):
@@ -21,7 +19,6 @@ class Attendee(models.Model):
     last_name = models.CharField(max_length=50, blank = True)
     guests = models.IntegerField(default=0)
     food_orders = models.ManyToManyField(FoodOrder)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'attendees'
