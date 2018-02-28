@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user.apps.UserConfig',
     'event.apps.EventConfig',
+    'food.apps.FoodConfig',
     'social_django',
     'social.apps.django_app.default',
     'rest_framework.authtoken',
