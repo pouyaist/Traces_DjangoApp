@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Food(models.Model):
     id = models.AutoField(primary_key=True)
     source = models.CharField(max_length=200, default= "meat")

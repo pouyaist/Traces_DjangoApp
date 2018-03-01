@@ -7,6 +7,7 @@ import json
 from user.factories import UserProfileFactory, UserAuthFactory
 from event.factories import EventFactory
 
+
 class TestEventResource(TestCase):
     def setUp(self):
         self.client = Client()

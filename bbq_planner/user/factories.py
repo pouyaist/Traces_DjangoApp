@@ -2,6 +2,7 @@ import factory
 from user.models import UserProfile
 import django.contrib.auth.models
 
+
 class UserAuthFactory(factory.Factory):
     class Meta:
         model = django.contrib.auth.models.User

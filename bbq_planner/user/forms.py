@@ -2,6 +2,7 @@ from django import forms
 from user.models import UserProfile
 from django.contrib.auth.models import User as DefaultUser
 
+
 class UserExtendForm(forms.ModelForm):
     class Meta:
         model = UserProfile

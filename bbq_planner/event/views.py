@@ -13,6 +13,7 @@ from rest_framework import permissions, status, authentication
 
 from event.models import Event
 
+
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 

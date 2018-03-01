@@ -4,6 +4,7 @@ from datetime import date
 from event.models import Event
 from user.factories import UserProfileFactory
 
+
 class EventFactory(factory.Factory):
 
     class Meta:

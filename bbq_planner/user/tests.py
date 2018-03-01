@@ -2,6 +2,7 @@ from django.test import TestCase
 from user.factories import UserProfileFactory, UserAuthFactory
 from django.test.client import Client, RequestFactory
 
+
 class TestRegister(TestCase):
     def setUp(self):
         self.user_auth = UserAuthFactory(username="user", password="pass", email="user@gmail.com")
