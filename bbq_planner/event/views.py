@@ -26,6 +26,12 @@ class EventResources(APIView):
         if event_date < date.today():
             return Response({'failue': " event date is for the past"},
                         status=status.HTTP_400_BAD_REQUEST)
+
+        if Event.objects.filter(name = event_name, category = category,
+         event_date = event_date, organizer = user.userprofile).exists():
+            return Response({'failue': " event is already created"},
+                        status=status.HTTP_400_BAD_REQUEST)
+
         Event(name = event_name, category = category,
          event_date = event_date, organizer = user.userprofile).save()
         return Response({'success': " event is successfully created"},

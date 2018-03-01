@@ -5,7 +5,7 @@ from datetime import date, timedelta
 import json
 
 from user.factories import UserProfileFactory, UserAuthFactory
-
+from event.factories import EventFactory
 
 class TestEventResource(TestCase):
     def setUp(self):
@@ -14,6 +14,8 @@ class TestEventResource(TestCase):
         self.user_auth.save()
         self.user = UserProfileFactory(user_auth = self.user_auth, phone = '0123456789', city = 'Eind')
         self.user.save()
+        self.event = EventFactory(organizer = self.user)
+        self.event.save()
 
     def test_successfully_created_event(self):
         self.client.login(username="user", password="pass")
@@ -36,6 +38,17 @@ class TestEventResource(TestCase):
         response = self.client.post('/event/create/', json.dumps(event),
          content_type='application/json')
         self.assertEqual(response.status_code, 401)
+
+    def test_create_already_created_event(self):
+        self.client.login(username="user", password="pass")
+        event = {
+        'name': self.event.name,
+        'category': self.event.category,
+        'event_date': str(self.event.event_date)
+        }
+        response = self.client.post('/event/create/', json.dumps(event),
+         content_type='application/json')
+        self.assertEqual(response.status_code, 400)
 
     def test_wrong_date(self):
         self.client.login(username="user", password="pass")
