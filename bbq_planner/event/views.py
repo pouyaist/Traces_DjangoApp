@@ -11,6 +11,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import permissions, status, authentication
 
+from event.models import Event
 
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -23,8 +24,9 @@ class EventResources(APIView):
         string_event_date = request.data.get('event_date')
         event_date = datetime.strptime(string_event_date, "%Y-%m-%d").date()
         if event_date < date.today():
-        	return Response({'failue': " event date is for the past"},
+            return Response({'failue': " event date is for the past"},
                         status=status.HTTP_400_BAD_REQUEST)
-
+        Event(name = event_name, category = category,
+         event_date = event_date, organizer = user.userprofile).save()
         return Response({'success': " event is successfully created"},
-                        status=status.HTTP_200_OK)
+                        status=status.HTTP_201_CREATED)
