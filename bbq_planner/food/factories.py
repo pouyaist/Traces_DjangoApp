@@ -5,8 +5,8 @@ from food.models import Food, FoodOrder
 class FoodFactory(factory.Factory):
     class Meta:
         model = Food
-    source = "Animal"
-    food_type = "Pork"
+    source = "animal"
+    food_type = "pork"
 
 
 

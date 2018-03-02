@@ -3,9 +3,12 @@ from django.test import TestCase
 from user.factories import UserProfileFactory, UserAuthFactory, AttendeeFactory
 from django.test.client import Client, RequestFactory
 from food.factories import FoodOrderFactory, FoodFactory
+from food.serializers import FoodOrderSerializer
 from user.serializers import AttendeeSerializer
 from user.models import Attendee
-
+from event.models import Event, EventAttendee
+from event.factories import EventFactory, EventAttendeeFactory
+from event.serializers import EventSerializer, EventAttendeeSerializer
 
 
 
@@ -59,10 +62,25 @@ class TestRegister(TestCase):
 
 class TestAttendee(TestCase):
     def setUp(self):
+        self.client = Client()
+        self.user_auth = UserAuthFactory(username="user", password="pass",
+            email="user@gmail.com")
+        self.user_auth.save()
+        self.user = UserProfileFactory(user_auth = self.user_auth,
+            phone = '0123456789', city = 'Eind')
+        self.user.save()
+        self.event = EventFactory(organizer = self.user)
+        self.event.save()
+
+        self.event_date =  str(self.event.event_date)
+
         self.food = FoodFactory()
         self.food.save()
 
-        self.food_order_1 = FoodOrderFactory(food = self.food)
+        self.food_chicken = FoodFactory(food_type="Chicken")
+        self.food_chicken.save()
+
+        self.food_order_1 = FoodOrderFactory(food = self.food_chicken)
         self.food_order_1.save()
 
         self.food_order_2 = FoodOrderFactory(food = self.food)
@@ -70,42 +88,35 @@ class TestAttendee(TestCase):
 
         self.attendee = AttendeeFactory()
         self.attendee.save()
-        self.attendee.food_orders.add(self.food_order_1)
-        self.attendee.food_orders.add(self.food_order_2)
-        self.client = Client()
-        self.factory = RequestFactory()
 
+        self.event_attendee = EventAttendeeFactory(event = self.event,
+                                                attendee = self.attendee)
+        self.event_attendee.save()
+
+        self.event_attendee.food_orders.add(self.food_order_1)
+        self.event_attendee.food_orders.add(self.food_order_2)
+
+
+    #TODO update the successfully test
     def test_post_successfully_created_attendee(self):
-        data={
-            'first_name': 'dima',
-            'last_name': 'Kondro',
-            'number_of_guests': 10,
-            'food_orders': AttendeeSerializer(self.attendee).data['food_orders']
-            }
-        response = self.client.post('/user/attend/', json.dumps(data),
-         content_type='application/json')
+        data = EventAttendeeSerializer(self.event_attendee).data
+        response = self.client.post(
+          f"/user/attend/{self.event_date }/{self.event.name}",
+          json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(Attendee.objects.filter(first_name = 'dima',
-         last_name = 'Kondro', number_of_guests = 10).exists(), True)
 
-    def test_post_invalid_attendee(self):
-        data={
-            'first_name': 'dima',
-            'last_name': 'Kondro',
-            'number_of_guests': 10,
-            'food_orders': 'asdas'
-            }
-        response = self.client.post('/user/attend/', json.dumps(data),
-         content_type='application/json')
+    def test_post_invalid_format_guests(self):
+        data = EventAttendeeSerializer(self.event_attendee).data
+        data['number_of_guests'] = 'invalid'
+        response = self.client.post(
+          f"/user/attend/{self.event_date }/{self.event.name}",
+          json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 412)
 
     def test_post_empty_food_orders_attendee(self):
-        data={
-            'first_name': 'dima',
-            'last_name': 'Kondro',
-            'number_of_guests': 10,
-            'food_orders': []
-            }
-        response = self.client.post('/user/attend/', json.dumps(data),
-         content_type='application/json')
+        data = EventAttendeeSerializer(self.event_attendee).data
+        data['food_orders'] = []
+        response = self.client.post(
+          f"/user/attend/{self.event_date }/{self.event.name}",
+          json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 412)

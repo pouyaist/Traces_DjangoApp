@@ -31,15 +31,3 @@ class AttendeeFactory(factory.Factory):
 
     first_name = factory.Sequence(lambda n: 'John{}'.format(n))
     last_name = 'Wick'
-    number_of_guests = 10
-
-    @factory.post_generation
-    def food_orders(self, create, extracted, **kwargs):
-        if not create:
-            # Simple build, do nothing.
-            return
-
-        if extracted:
-            # A list of groups were passed in, use them
-            for food_order in extracted:
-                self.food_orders.add(food_order)

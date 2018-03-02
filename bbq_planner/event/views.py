@@ -10,7 +10,7 @@ from event.serializers import EventSerializer
 
 class EventItemResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-
+    #TODO update URL
     @transaction.atomic
     def post(self, request):
         user = request.user

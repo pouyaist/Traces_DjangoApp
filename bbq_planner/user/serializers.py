@@ -4,9 +4,7 @@ from food.serializers import FoodOrderSerializer
 
 
 class AttendeeSerializer(serializers.ModelSerializer):
-    food_orders = FoodOrderSerializer(many=True)
 
     class Meta:
         model = Attendee
-        fields = ('id', 'first_name', 'last_name', 'number_of_guests',
-         'food_orders')
+        fields = ('id', 'first_name', 'last_name')
