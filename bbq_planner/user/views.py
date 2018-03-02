@@ -1,7 +1,6 @@
 from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth.models import User as AuthUser
-from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 

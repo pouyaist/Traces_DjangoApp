@@ -6,7 +6,7 @@ from django.template import loader
 def index(request):
 
     if request.user.is_authenticated:
-        return HttpResponseRedirect(redirect_to="/user/dashboard/")
+        return HttpResponseRedirect(redirect_to="/events/")
     else:
         template = loader.get_template('home/index.html')
         context = {

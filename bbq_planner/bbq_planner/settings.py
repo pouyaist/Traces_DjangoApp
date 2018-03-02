@@ -144,7 +144,7 @@ STATICFILES_DIRS = [
 ]
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/user/dashboard/'
+LOGIN_REDIRECT_URL = '/events/'
 LOGIN_URL = '/accounts/login'
 
 AUTHENTICATION_BACKENDS = (
