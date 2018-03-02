@@ -27,10 +27,13 @@ class EventItemResources(APIView):
             return Response({'failue': " event is already created"},
                         status=status.HTTP_400_BAD_REQUEST)
 
-        Event(name = event_name, category = category,
-         event_date = event_date, organizer = user.userprofile).save()
-        return Response({'success': " event is successfully created"},
+        event = Event(name = event_name, category = category,
+         event_date = event_date, organizer = user.userprofile)
+        event.save()
+        return Response({'success':
+                        f" event {event.id} is successfully created"},
                         status=status.HTTP_201_CREATED)
+
 
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)

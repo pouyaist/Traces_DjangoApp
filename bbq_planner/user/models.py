@@ -17,7 +17,7 @@ class Attendee(models.Model):
     id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=50, blank = True)
     last_name = models.CharField(max_length=50, blank = True)
-    guests = models.IntegerField(default=0)
+    number_of_guests = models.IntegerField(default=0)
     food_orders = models.ManyToManyField(FoodOrder)
 
     class Meta:

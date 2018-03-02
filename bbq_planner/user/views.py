@@ -1,10 +1,18 @@
+from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import permissions, status, authentication
+from user.models import Attendee
+from user.serializers import AttendeeSerializer
 from user.forms import UserAuthForm, UserExtendForm
+from food.models import Food, FoodOrder
 
 
 def register(request):
@@ -28,3 +36,43 @@ def register(request):
         user_extended_form = UserExtendForm()
         return render(request, 'registration/registration.html',
                       {'user_auth_form': user_auth_form, 'user_extended_form': user_extended_form})
+
+
+class AttendeeResources(APIView):
+    permission_classes = ()
+    authentication_classes = ()
+
+    @transaction.atomic
+    def post(self, request):
+        #TODO exception handling:
+        serializer = AttendeeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"reason": serializer.errors},
+                    status=status.HTTP_412_PRECONDITION_FAILED)
+
+        attendee_serialized = serializer.data
+
+
+        food_orders = []
+        if not attendee_serialized['food_orders']:
+            return Response({"reason": "empty food orders"},
+                    status=status.HTTP_412_PRECONDITION_FAILED)
+        for food_order in attendee_serialized['food_orders']:
+            number = food_order['number']
+            if not food_order['food']:
+                return Response({"reason": "empty food item"},
+                        status=status.HTTP_412_PRECONDITION_FAILED)
+            food_source = food_order['food']['source']
+            food_type = food_order['food']['food_type']
+            food = Food(source = food_source, food_type = food_type)
+            food.save()
+            food_order = FoodOrder(food = food, number = number)
+            food_order.save()
+            food_orders.append(food_order)
+
+        attendee = Attendee(first_name = attendee_serialized['first_name'],
+            last_name = attendee_serialized['last_name'],
+            number_of_guests = attendee_serialized['number_of_guests'])
+        attendee.save()
+        return Response({'success': " attendee is successfully\
+                    registered to the event"}, status=status.HTTP_201_CREATED)
