@@ -35,6 +35,7 @@ class EventItemResources(APIView):
                         status=status.HTTP_201_CREATED)
 
 
+
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -44,3 +45,20 @@ class EventResources(APIView):
             return Response([], status=status.HTTP_200_OK)
         events = EventSerializer(events, many=True)
         return Response(events.data, status=status.HTTP_200_OK)
+
+
+class EventInstanceResources(APIView):
+    permission_classes = ()
+    authentication_classes = ()
+
+    def get(self, request, event_date, name):
+        user = request.user
+        event_date = datetime.strptime(event_date, "%Y-%m-%d").date()
+        events = Event.objects.filter(name = name, event_date = event_date)
+        if not events:
+            return Response({'reason': f"there is no event with the name:\
+                     {name} and the date {str(event_date)} "},
+                      status=status.HTTP_404_NOT_FOUND)
+
+        event = EventSerializer(events[0])
+        return Response(event.data, status=status.HTTP_200_OK)

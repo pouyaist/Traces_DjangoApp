@@ -14,3 +14,4 @@ class Event(models.Model):
 
     class Meta:
         db_table = 'events'
+        unique_together = ("name", "event_date")

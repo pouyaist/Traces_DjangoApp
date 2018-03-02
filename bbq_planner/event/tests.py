@@ -4,16 +4,19 @@ from django.test.client import Client, RequestFactory
 from datetime import date, timedelta
 import json
 
-from user.factories import UserProfileFactory, UserAuthFactory
+from user.factories import UserProfileFactory, UserAuthFactory, AttendeeFactory
 from event.factories import EventFactory
+from food.factories import FoodFactory, FoodOrderFactory
 
 
-class TestEventResource(TestCase):
+class TestEventItemResource(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user_auth = UserAuthFactory(username="user", password="pass", email="user@gmail.com")
+        self.user_auth = UserAuthFactory(username="user", password="pass",
+            email="user@gmail.com")
         self.user_auth.save()
-        self.user = UserProfileFactory(user_auth = self.user_auth, phone = '0123456789', city = 'Eind')
+        self.user = UserProfileFactory(user_auth = self.user_auth,
+            phone = '0123456789', city = 'Eind')
         self.user.save()
         self.event = EventFactory(organizer = self.user)
         self.event.save()
@@ -62,11 +65,82 @@ class TestEventResource(TestCase):
          content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
+
+class TestEventResource(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user_auth = UserAuthFactory(username="user", password="pass",
+            email="user@gmail.com")
+        self.user_auth.save()
+        self.user = UserProfileFactory(user_auth = self.user_auth,
+            phone = '0123456789', city = 'Eind')
+        self.user.save()
+        self.event = EventFactory(organizer = self.user)
+        self.event.save()
+
     def test_get_successfully_all_events(self):
         self.client.login(username="user", password="pass")
         response = self.client.get('/events/')
+        event_date = str(self.event.event_date)
+        event = response.data[0]
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(event['name'], self.event.name)
+        self.assertEqual(event['organizer_name'],
+                        self.event.organizer.user_auth.get_full_name())
+        self.assertEqual(event['category'], self.event.category)
+        self.assertEqual(event['number_of_attendees'], 0)
+        self.assertEqual(event['event_date'], event_date)
 
     def test_get_user_is_not_loggedin(self):
         response = self.client.get('/events/')
         self.assertEqual(response.status_code, 401)
+
+
+
+class TestEventInstanceResource(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user_auth = UserAuthFactory(username="user", password="pass",
+            email="user@gmail.com")
+        self.user_auth.save()
+        self.user = UserProfileFactory(user_auth = self.user_auth,
+            phone = '0123456789', city = 'Eind')
+        self.user.save()
+        self.event = EventFactory(organizer = self.user)
+        self.event.save()
+
+        self.food = FoodFactory()
+        self.food.save()
+
+        self.food_order_1 = FoodOrderFactory(food = self.food)
+        self.food_order_1.save()
+
+        self.food_order_2 = FoodOrderFactory(food = self.food)
+        self.food_order_2.save()
+
+        self.attendee = AttendeeFactory()
+        self.attendee.save()
+        self.attendee.food_orders.add(self.food_order_1)
+        self.attendee.food_orders.add(self.food_order_2)
+        self.event.attendees.add(self.attendee)
+
+    def test_get_wrong_date_event(self):
+        event_date = str(self.event.event_date - timedelta(days = 10))
+        response = self.client.get(f"/events/item/{event_date}/{self.event.name}")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_wrong_event_name(self):
+        event_date = str(self.event.event_date)
+        response = self.client.get(f"/events/item/{event_date}/wrong")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_successfully_event(self):
+        event_date = str(self.event.event_date)
+        response = self.client.get(f"/events/item/{event_date}/{self.event.name}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], self.event.name)
+        self.assertEqual(response.data['organizer_name'],
+                        self.event.organizer.user_auth.get_full_name())
+        self.assertEqual(response.data['category'], self.event.category)
+        self.assertEqual(response.data['number_of_attendees'], 1)
+        self.assertEqual(response.data['event_date'], event_date)
