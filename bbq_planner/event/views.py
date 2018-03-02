@@ -8,6 +8,7 @@ from event.models import Event
 from event.serializers import EventSerializer
 
 
+
 class EventItemResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     #TODO update URL
@@ -27,13 +28,14 @@ class EventItemResources(APIView):
             return Response({'failue': " event is already created"},
                         status=status.HTTP_400_BAD_REQUEST)
 
-        event = Event(name = event_name, category = category,
-         event_date = event_date, organizer = user.userprofile)
+        #TODO update static url
+        url = "http://localhost:8000" + f"/item/{string_event_date}/{event_name}"
+        event = Event(name = event_name, category = category, url = url,
+                event_date = event_date, organizer = user.userprofile)
         event.save()
         return Response({'success':
                         f" event {event.id} is successfully created"},
                         status=status.HTTP_201_CREATED)
-
 
 
 class EventResources(APIView):
