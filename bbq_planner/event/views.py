@@ -66,8 +66,8 @@ class EventInstanceResources(APIView):
         event_date = datetime.strptime(event_date, "%Y-%m-%d").date()
         events = Event.objects.filter(name = name, event_date = event_date)
         if not events:
-            return Response({'reason': f"there is no event with the name:\
-                     {name} and the date {str(event_date)} "},
+            return Response({'reason': "there is no event with the name:"\
+                     f"{name} and the date {str(event_date)} "},
                       status=status.HTTP_404_NOT_FOUND)
 
         event = EventSerializer(events[0])
