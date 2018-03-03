@@ -45,6 +45,7 @@ class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
+        return Response({'name':'sdsds'}, status=status.HTTP_200_OK)
         if request.user.is_staff:
             return HttpResponseRedirect(redirect_to="/admin/")
         if request.user.userprofile is None:
