@@ -78,6 +78,15 @@ class TestEventResource(TestCase):
         self.event = EventFactory(organizer = self.user)
         self.event.save()
 
+        self.food = FoodFactory()
+        self.food.save()
+
+        self.food_chicken = FoodFactory(food_type="Chicken")
+        self.food_chicken.save()
+
+        self.event.food_types.add(self.food)
+        self.event.food_types.add(self.food_chicken)
+
     def test_get_successfully_all_events(self):
         self.client.login(username="user", password="pass")
         response = self.client.get('/events/')
@@ -90,11 +99,11 @@ class TestEventResource(TestCase):
         self.assertEqual(event['category'], self.event.category)
         self.assertEqual(event['number_of_attendees'], 0)
         self.assertEqual(event['event_date'], event_date)
+        self.assertEqual(len(event['food_types']), 2)
 
     def test_get_user_is_not_loggedin(self):
         response = self.client.get('/events/')
         self.assertEqual(response.status_code, 401)
-
 
 
 class TestEventInstanceResource(TestCase):

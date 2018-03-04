@@ -16,7 +16,7 @@ from user.forms import UserAuthForm, UserExtendForm
 from food.models import Food, FoodOrder
 from event.models import Event, EventAttendee
 from event.serializers import EventAttendeeSerializer
-
+#TODO remove unused libraries
 
 def register(request):
     if request.method == 'POST':
@@ -41,7 +41,7 @@ def register(request):
                       {'user_auth_form': user_auth_form, 'user_extended_form': user_extended_form})
 
 
-class AttendeeResources(APIView):
+class EventAttendeeResources(APIView):
     permission_classes = ()
     authentication_classes = ()
 
@@ -68,13 +68,18 @@ class AttendeeResources(APIView):
                         status=status.HTTP_412_PRECONDITION_FAILED)
             food_source = food_order['food']['source']
             food_type = food_order['food']['food_type']
-            try:
-                food, _ = Food.objects.get_or_create(source = food_source,
-                                          food_type = food_type)
-            except ValueError:
-                return Response({"reason": "food format is wrong"},
-                        status=status.HTTP_412_PRECONDITION_FAILED)
-
+            food = Food.objects.filter(source = food_source,
+                                      food_type = food_type)
+            if not food.exists():
+                return Response({"reason": f"there is not food type"
+                 " with {food_type} and {food_source}"},
+                status=status.HTTP_412_PRECONDITION_FAILED)
+            #TODO change the 412 to 400
+            food = food[0]
+            if food not in current_event.food_types.all():
+                return Response({"reason": f"there is not food type"
+                 " with {food_type} and {food_source}"},
+                    status=status.HTTP_412_PRECONDITION_FAILED)
             food_order = FoodOrder(food = food, number = number)
             food_order.save()
             food_orders.append(food_order)

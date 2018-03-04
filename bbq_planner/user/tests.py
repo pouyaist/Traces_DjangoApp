@@ -11,7 +11,6 @@ from event.factories import EventFactory, EventAttendeeFactory
 from event.serializers import EventSerializer, EventAttendeeSerializer
 
 
-
 class TestRegister(TestCase):
     def setUp(self):
         self.user_auth = UserAuthFactory(username="user", password="pass", email="user@gmail.com")
@@ -60,7 +59,7 @@ class TestRegister(TestCase):
             self.assertEqual(response.status_code, 400)
 
 
-class TestAttendee(TestCase):
+class TestEventAttendeeResource(TestCase):
     def setUp(self):
         self.client = Client()
         self.user_auth = UserAuthFactory(username="user", password="pass",
@@ -69,10 +68,6 @@ class TestAttendee(TestCase):
         self.user = UserProfileFactory(user_auth = self.user_auth,
             phone = '0123456789', city = 'Eind')
         self.user.save()
-        self.event = EventFactory(organizer = self.user)
-        self.event.save()
-
-        self.event_date =  str(self.event.event_date)
 
         self.food = FoodFactory()
         self.food.save()
@@ -85,6 +80,13 @@ class TestAttendee(TestCase):
 
         self.food_order_2 = FoodOrderFactory(food = self.food)
         self.food_order_2.save()
+
+        self.event = EventFactory(organizer = self.user)
+        self.event.save()
+        self.event.food_types.add(self.food)
+        self.event.food_types.add(self.food_chicken)
+
+        self.event_date =  str(self.event.event_date)
 
         self.attendee = AttendeeFactory()
         self.attendee.save()

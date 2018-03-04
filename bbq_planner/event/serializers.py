@@ -1,17 +1,18 @@
 from rest_framework import serializers
 from event.models import Event, EventAttendee
 from user.serializers import AttendeeSerializer
-from food.serializers import FoodOrderSerializer
+from food.serializers import FoodSerializer, FoodOrderSerializer
 
 class EventSerializer(serializers.ModelSerializer):
     organizer_name = serializers.SerializerMethodField()
     number_of_attendees = serializers.SerializerMethodField()
     list_of_attendees = serializers.SerializerMethodField()
     food_order_number_list = serializers.SerializerMethodField()
+    food_types = FoodSerializer(many = True)
 
     class Meta:
         model = Event
-        fields = ('id', 'name', 'organizer_name', 'category',
+        fields = ('id', 'name', 'organizer_name', 'category', 'food_types',
          'list_of_attendees', 'number_of_attendees', 'event_date',
          'food_order_number_list', 'url')
 

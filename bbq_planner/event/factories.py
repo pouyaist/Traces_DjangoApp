@@ -16,6 +16,17 @@ class EventFactory(factory.Factory):
     event_date = date.today()
     url = factory.Sequence(lambda n: 'http://bbqplanner/event/{}'.format(n))
 
+    @factory.post_generation
+    def food_types(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for food in extracted:
+                self.food_types.add(food_types)
+
 
 class EventAttendeeFactory(factory.Factory):
 

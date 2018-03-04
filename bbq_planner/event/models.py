@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import UserProfile, Attendee
-from food.models import FoodOrder
+from food.models import FoodOrder, Food
 
 
 class Event(models.Model):
@@ -10,6 +10,7 @@ class Event(models.Model):
         on_delete=models.SET_NULL, null=True)
     attendees = models.ManyToManyField(Attendee, through='EventAttendee')
     category = models.CharField(max_length=50, default = "BBQ")
+    food_types = models.ManyToManyField(Food)
     event_date = models.DateField()
     url = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
