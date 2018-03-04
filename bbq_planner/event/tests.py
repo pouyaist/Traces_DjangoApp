@@ -154,12 +154,13 @@ class TestEventInstanceResource(TestCase):
         event_date = str(self.event.event_date)
         response = self.client.get(f"/events/item/{event_date}/{self.event.name}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['name'], self.event.name)
-        self.assertEqual(response.data['event_date'], event_date)
-        self.assertEqual(response.data['organizer_name'],
+        data = response.data.get('event')
+        self.assertEqual(data['name'], self.event.name)
+        self.assertEqual(data['event_date'], event_date)
+        self.assertEqual(data['organizer_name'],
                         self.event.organizer.user_auth.get_full_name())
-        self.assertEqual(response.data['category'], self.event.category)
-        self.assertEqual(response.data['number_of_attendees'], 11)
+        self.assertEqual(data['category'], self.event.category)
+        self.assertEqual(data['number_of_attendees'], 11)
         food_order_number_list = {'chicken': 5, 'pork': 5}
-        self.assertEqual(response.data['food_order_number_list'],
+        self.assertEqual(data['food_order_number_list'],
                                        food_order_number_list)
