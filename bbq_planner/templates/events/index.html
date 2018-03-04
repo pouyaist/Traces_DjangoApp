@@ -1,5 +1,33 @@
 {% extends "includes/base.html" %}
 {% load staticfiles %}
-adad
+
 {% block content %}
+<div class="container-fluid" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+    <table class="table">
+       <thead>
+         <tr>
+           <th>Event event name</th>
+           <th>Organizer</th>
+           <th>Category</th>
+           <th>Number of Attendees</th>
+           <th>url</th>
+         </tr>
+       </thead>
+       <tbody>
+         {% for event in events %}
+         <tr>
+           <td>{{ event.name|safe }}</td>
+           <td>{{ event.organizer_name|safe }}</td>
+           <td>{{ event.category|safe }}</td>
+           <td>{{ event.number_of_attendees|safe }}</td>
+           <td>{{ event.url|safe }}</td>
+         </tr>
+         {% endfor %}
+       </tbody>
+     </table>
+     <!--#TODO change the href found a bug with namespaces in django 2-->
+    <a class="btn btn-lg btn-primary" href="http://localhost:8000/events/item/" role="button">Creat a new event</a>
+    {% include 'includes/footer.html' %}
+</div>
 {% endblock %}

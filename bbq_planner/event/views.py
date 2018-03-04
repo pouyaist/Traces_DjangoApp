@@ -5,6 +5,7 @@ from datetime import datetime, date, timedelta
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import permissions, status, authentication
 from event.models import Event
 from event.serializers import EventSerializer
@@ -14,8 +15,11 @@ from user.models import UserProfile
 
 class EventItemResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    #TODO update URL
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'events/create_event.html'
+
     @transaction.atomic
+    #TODO validate input
     def post(self, request):
         user = request.user
         event_name = request.data.get('name')
@@ -43,19 +47,18 @@ class EventItemResources(APIView):
 
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'events/index.html'
 
     def get(self, request):
-        return Response({'name':'sdsds'}, status=status.HTTP_200_OK)
-        if request.user.is_staff:
-            return HttpResponseRedirect(redirect_to="/admin/")
         if request.user.userprofile is None:
-            return Response(events.data, status=status.HTTP_404_NOT_FOUND)
+            return Response({'events': 'there is no userprofile'}, status=status.HTTP_404_NOT_FOUND)
         events = Event.objects.filter(organizer_id = request.user.userprofile.id)
 
         if not events:
-            return Response([], status=status.HTTP_200_OK)
+            return Response({'events': 'No Events are in the database'}, status=status.HTTP_200_OK)
         events = EventSerializer(events, many=True)
-        return Response(events.data, status=status.HTTP_200_OK)
+        return Response({'events': events.data},  status=status.HTTP_200_OK)
 
 
 class EventInstanceResources(APIView):

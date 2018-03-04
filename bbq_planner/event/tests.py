@@ -82,7 +82,7 @@ class TestEventResource(TestCase):
         self.client.login(username="user", password="pass")
         response = self.client.get('/events/')
         event_date = str(self.event.event_date)
-        event = response.data[0]
+        event = response.data['events'][0]
         self.assertEqual(response.status_code, 200)
         self.assertEqual(event['name'], self.event.name)
         self.assertEqual(event['organizer_name'],
