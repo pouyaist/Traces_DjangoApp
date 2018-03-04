@@ -1,2 +1,15 @@
+from django.contrib import admin
 
-# Register your models here.
+from food.models import Food, FoodOrder
+
+class FoodAdmin(admin.ModelAdmin):
+    model = Food
+
+
+class FoodOrderAdmin(admin.ModelAdmin):
+    model = FoodOrder
+
+
+
+admin.site.register(Food, FoodAdmin)
+admin.site.register(FoodOrder, FoodOrderAdmin)
