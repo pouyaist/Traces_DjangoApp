@@ -3,10 +3,6 @@ from django.test import TestCase
 from user.factories import UserProfileFactory, UserAuthFactory, AttendeeFactory
 from django.test.client import Client, RequestFactory
 from food.factories import FoodOrderFactory, FoodFactory
-from food.serializers import FoodOrderSerializer
-from user.serializers import AttendeeSerializer
-from user.models import Attendee
-from event.models import Event, EventAttendee
 from event.factories import EventFactory, EventAttendeeFactory
 from event.serializers import EventAttendeeSerializer
 

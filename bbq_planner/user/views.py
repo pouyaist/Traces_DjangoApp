@@ -1,21 +1,16 @@
 from django.db import transaction
 from django.shortcuts import render
-from django.contrib.auth.models import User as AuthUser
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
 
-from datetime import datetime, date, timedelta
+from datetime import datetime
 
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import permissions, status, authentication
+from rest_framework import status
 from user.models import Attendee
-from user.serializers import AttendeeSerializer
 from user.forms import UserAuthForm, UserExtendForm
 from food.models import Food, FoodOrder
 from event.models import Event, EventAttendee
-from event.serializers import EventAttendeeSerializer
 #TODO remove unused libraries
 
 def register(request):
@@ -34,7 +29,7 @@ def register(request):
         return render(request, 'registration/registration.html', {'error_form': user_auth_form}, status=400)
 
     elif request.method == 'GET':
-        template = loader.get_template('registration/registration.html')
+        loader.get_template('registration/registration.html')
         user_auth_form = UserAuthForm()
         user_extended_form = UserExtendForm()
         return render(request, 'registration/registration.html',

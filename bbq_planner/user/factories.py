@@ -2,7 +2,6 @@ import django.contrib.auth.models
 import factory
 
 from user.models import UserProfile, Attendee
-from food.factories import FoodOrderFactory
 
 
 class UserAuthFactory(factory.Factory):

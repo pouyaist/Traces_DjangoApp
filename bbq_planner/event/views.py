@@ -1,16 +1,11 @@
 from django.db import transaction
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from datetime import datetime, date, timedelta
+from datetime import date, datetime
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
-from rest_framework import permissions, status, authentication
+from rest_framework import permissions, status
 from event.models import Event
 from event.serializers import EventSerializer, CreateEventSerializer
-from user.models import UserProfile
-from food.serializers import FoodSerializer
 
 
 

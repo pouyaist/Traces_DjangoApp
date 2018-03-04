@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.test.client import Client, RequestFactory
+from django.test.client import Client
 
 from datetime import date, timedelta
 import json
