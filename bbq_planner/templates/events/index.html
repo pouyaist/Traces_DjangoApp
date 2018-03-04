@@ -12,6 +12,7 @@
            <th>Category</th>
            <th>Number of Attendees</th>
            <th>url</th>
+           <th>Food types</th>
          </tr>
        </thead>
        <tbody>
@@ -22,6 +23,18 @@
            <td>{{ event.category|safe }}</td>
            <td>{{ event.number_of_attendees|safe }}</td>
            <td>{{ event.url|safe }}</td>
+           <td>
+             <table>
+              <tr>
+                {% for food in event.food_types %}
+                <td>
+                  {{food.food_type}},
+                </td>
+                {% endfor %}
+              </tr>
+            </table>
+           </td>
+
          </tr>
          {% endfor %}
        </tbody>
