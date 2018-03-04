@@ -4,9 +4,22 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework import permissions, status
+from rest_framework.decorators import (api_view,
+                            permission_classes, renderer_classes)
 from event.models import Event
 from event.serializers import EventSerializer, CreateEventSerializer
 
+
+class EventTemplateResources(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'events/create_event.html'
+
+    def get(self, request):
+        event_serializer = CreateEventSerializer()
+        #TODO found a bug in django rest framework for nested serializers
+        return Response({'event_serializer': event_serializer},
+          template_name = 'events/create_event.html', status=status.HTTP_200_OK)
 
 
 class EventItemResources(APIView):
@@ -15,7 +28,6 @@ class EventItemResources(APIView):
     template_name = 'events/create_event.html'
 
     @transaction.atomic
-    #TODO validate input
     def post(self, request):
         user = request.user
         event_name = request.data.get('name')
@@ -39,7 +51,8 @@ class EventItemResources(APIView):
                         status=status.HTTP_400_BAD_REQUEST)
 
         #TODO update static url
-        url = "http://localhost:8000" + f"/item/{string_event_date}/{event_name}"
+        event_name_url = '%20'.join(event_name.split(' '))
+        url = "http://localhost:8000" + f"/events/item/{string_event_date}/{event_name_url}"
         event = Event(name = event_name, category = category, url = url,
                 event_date = event_date, organizer = user.userprofile)
         event.save()
@@ -47,11 +60,6 @@ class EventItemResources(APIView):
                         f" event {event.id} is successfully created"},
                         status=status.HTTP_201_CREATED)
 
-    def get(self, request):
-        event_serializer = CreateEventSerializer()
-        #TODO a but in django rest framework
-        return Response({'event_serializer': event_serializer},
-          status=status.HTTP_200_OK)
 
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
