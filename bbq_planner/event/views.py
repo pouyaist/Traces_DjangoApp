@@ -33,9 +33,11 @@ class EventItemResources(APIView):
         user = request.user
         event_name = request.data.get('name')
         category = request.data.get('category')
+        food_type_ids = request.data.get('food_types')
         string_event_date = request.data.get('event_date')
-        if (event_name or category or string_event_date) in ['', None]:
-            return Response({'failue': 'event date is for the past'},
+        if (event_name or category or string_event_dateor
+                or food_type_ids ) in [[], '', None]:
+            return Response({'failue': 'some of the inputs are empty'},
                         status=status.HTTP_400_BAD_REQUEST)
         try:
             event_date = datetime.strptime(string_event_date, "%Y-%m-%d").date()
@@ -46,8 +48,8 @@ class EventItemResources(APIView):
             return Response({'failue': 'event date is for the past'},
                         status=status.HTTP_400_BAD_REQUEST)
 
-        if Event.objects.filter(name = event_name, category = category,
-         event_date = event_date, organizer = user.userprofile).exists():
+        if Event.objects.filter(name = event_name,
+                                event_date = event_date).exists():
             return Response({'failue': 'event is already created'},
                         status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,6 +59,8 @@ class EventItemResources(APIView):
         event = Event(name = event_name, category = category, url = url,
                 event_date = event_date, organizer = user.userprofile)
         event.save()
+        for food_type_id in food_type_ids:
+            event.food_types.add(food_type_id)
         return Response({'success':
                         f" event {event.id} is successfully created"},
                         status=status.HTTP_201_CREATED)
