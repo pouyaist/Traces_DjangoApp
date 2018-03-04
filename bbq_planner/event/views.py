@@ -5,17 +5,18 @@ from datetime import datetime, date, timedelta
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework import permissions, status, authentication
 from event.models import Event
-from event.serializers import EventSerializer
+from event.serializers import EventSerializer, CreateEventSerializer
 from user.models import UserProfile
+from food.serializers import FoodSerializer
 
 
 
 class EventItemResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    renderer_classes = [TemplateHTMLRenderer]
+    renderer_classes = [JSONRenderer]
     template_name = 'events/create_event.html'
 
     @transaction.atomic
@@ -25,14 +26,21 @@ class EventItemResources(APIView):
         event_name = request.data.get('name')
         category = request.data.get('category')
         string_event_date = request.data.get('event_date')
-        event_date = datetime.strptime(string_event_date, "%Y-%m-%d").date()
+        if (event_name or category or string_event_date) in ['', None]:
+            return Response({'failue': 'event date is for the past'},
+                        status=status.HTTP_400_BAD_REQUEST)
+        try:
+            event_date = datetime.strptime(string_event_date, "%Y-%m-%d").date()
+        except ValueError:
+             return Response({'failue': 'event date is not well formated'},
+                         status=status.HTTP_400_BAD_REQUEST)
         if event_date < date.today():
-            return Response({'failue': " event date is for the past"},
+            return Response({'failue': 'event date is for the past'},
                         status=status.HTTP_400_BAD_REQUEST)
 
         if Event.objects.filter(name = event_name, category = category,
          event_date = event_date, organizer = user.userprofile).exists():
-            return Response({'failue': " event is already created"},
+            return Response({'failue': 'event is already created'},
                         status=status.HTTP_400_BAD_REQUEST)
 
         #TODO update static url
@@ -44,6 +52,11 @@ class EventItemResources(APIView):
                         f" event {event.id} is successfully created"},
                         status=status.HTTP_201_CREATED)
 
+    def get(self, request):
+        event_serializer = CreateEventSerializer()
+        #TODO a but in django rest framework
+        return Response({'event_serializer': event_serializer},
+          status=status.HTTP_200_OK)
 
 class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -66,7 +79,6 @@ class EventInstanceResources(APIView):
     authentication_classes = ()
 
     def get(self, request, event_date, name):
-        user = request.user
         event_date = datetime.strptime(event_date, "%Y-%m-%d").date()
         events = Event.objects.filter(name = name, event_date = event_date)
         if not events:

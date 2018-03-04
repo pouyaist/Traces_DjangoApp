@@ -1,0 +1,31 @@
+{% extends "includes/base.html" %}
+{% load staticfiles %}
+{% load rest_framework %}
+{% block content %}
+<div class="container-fluid" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+    <div id="login-overlay" class="modal-dialog">
+        <div class="login-form">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Create an unforgettable BBQ event</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="well">
+                            <form id="eventForm" method="post" action="http://localhost:8000/events/item/"
+                                  class="eventForm">
+                                {% csrf_token %}
+                                {% render_form event_serializer %}
+                                <input type="submit" value="Save" class="btn btn-success btn-block"/>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</div>
+{% endblock %}

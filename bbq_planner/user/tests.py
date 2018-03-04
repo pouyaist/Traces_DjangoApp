@@ -8,7 +8,7 @@ from user.serializers import AttendeeSerializer
 from user.models import Attendee
 from event.models import Event, EventAttendee
 from event.factories import EventFactory, EventAttendeeFactory
-from event.serializers import EventSerializer, EventAttendeeSerializer
+from event.serializers import EventAttendeeSerializer
 
 
 class TestRegister(TestCase):

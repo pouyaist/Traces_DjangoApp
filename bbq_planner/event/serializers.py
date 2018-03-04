@@ -43,6 +43,19 @@ class EventSerializer(serializers.ModelSerializer):
         return food_order_number_list
 
 
+class CreateEventSerializer(serializers.ModelSerializer):
+    organizer_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = ('id', 'name', 'organizer_name',
+         'category', 'event_date',
+        )
+
+    def get_organizer_name(self, obj):
+        return obj.organizer.user_auth.get_full_name()
+
+
 class EventAttendeeSerializer(serializers.ModelSerializer):
     event = EventSerializer()
     attendee = AttendeeSerializer()
