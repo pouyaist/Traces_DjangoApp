@@ -1,23 +1,16 @@
 from django import forms
-from event.models import Event
-
+from event.models import Event, EventAttendee
 
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'event_date']
+        fields = ['name', 'event_date', 'category', 'event_date', 'food_types']
 
 
-class UserExtendForm(forms.ModelForm):
+class EventAttendeeForm(forms.ModelForm):
     class Meta:
-        model = UserProfile
-        fields = ['city', 'phone']
-
-
-class UserAuthForm(forms.ModelForm):
-    class Meta:
-        model = DefaultUser
-        fields = ['username', 'password', 'email', 'first_name', 'last_name']
+        model = EventAttendee
+        fields = ['event', 'attendee', 'number_of_guests', 'food_orders']
 
 
 def __init__(self, *args, **kwargs):
