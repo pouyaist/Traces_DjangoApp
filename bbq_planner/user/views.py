@@ -11,7 +11,6 @@ from user.models import Attendee
 from user.forms import UserAuthForm, UserExtendForm
 from food.models import Food, FoodOrder
 from event.models import Event, EventAttendee
-#TODO remove unused libraries
 
 def register(request):
     if request.method == 'POST':
@@ -40,6 +39,7 @@ class EventAttendeeResources(APIView):
     permission_classes = ()
     authentication_classes = ()
 
+    #TODO validate input
     @transaction.atomic
     def post(self, request, event_date, event_name):
         event_date = datetime.strptime(event_date, "%Y-%m-%d").date()

@@ -1,6 +1,6 @@
 from django import forms
 from user.models import UserProfile
-from django.contrib.auth.models import User as DefaultUser
+from django.contrib.auth.models import User
 
 
 class UserExtendForm(forms.ModelForm):
@@ -11,7 +11,7 @@ class UserExtendForm(forms.ModelForm):
 
 class UserAuthForm(forms.ModelForm):
     class Meta:
-        model = DefaultUser
+        model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name']
 
 

@@ -8,6 +8,7 @@ from rest_framework.decorators import (api_view,
                             permission_classes, renderer_classes)
 from event.models import Event
 from event.serializers import EventSerializer, CreateEventSerializer
+from user.serializers import AttendeeSerializer
 
 
 class EventTemplateResources(APIView):
@@ -80,6 +81,8 @@ class EventResources(APIView):
 class EventInstanceResources(APIView):
     permission_classes = ()
     authentication_classes = ()
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'events/event_item.html'
 
     def get(self, request, event_date, name):
         event_date = datetime.strptime(event_date, "%Y-%m-%d").date()
@@ -89,5 +92,6 @@ class EventInstanceResources(APIView):
                      f"{name} and the date {str(event_date)} "},
                       status=status.HTTP_404_NOT_FOUND)
 
-        event = EventSerializer(events[0])
-        return Response(event.data, status=status.HTTP_200_OK)
+        event_serializer = EventSerializer(events[0])
+        return Response({'event': event_serializer.data},
+                        status=status.HTTP_200_OK)
