@@ -1,4 +1,6 @@
 from django.db import transaction
+from django.conf import settings
+from django.shortcuts import redirect
 from datetime import date, datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -56,15 +58,13 @@ class EventItemResources(APIView):
 
         #TODO update static url
         event_name_url = '%20'.join(event_name.split(' '))
-        url = "http://localhost:8000" + f"/events/item/{string_event_date}/{event_name_url}"
+        url = settings.ROOT_URL + f"/events/item/{string_event_date}/{event_name_url}"
         event = Event(name = event_name, category = category, url = url,
                 event_date = event_date, organizer = user.userprofile)
         event.save()
         for food_type_id in food_type_ids:
             event.food_types.add(food_type_id)
-        return Response({'success':
-                        f" event {event.id} is successfully created"},
-                        status=status.HTTP_201_CREATED)
+        return redirect('/events/')
 
 
 class EventResources(APIView):

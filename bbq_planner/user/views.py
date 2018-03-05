@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
 
 from datetime import datetime
@@ -102,5 +102,4 @@ class EventAttendeeResources(APIView):
         for food_order in food_orders:
             event_attendee.food_orders.add(food_order)
 
-        return Response({'success': " attendee is successfully\
-                    registered to the event"}, status=status.HTTP_201_CREATED)
+        return redirect('/')

@@ -153,3 +153,5 @@ LOGIN_URL = '/accounts/login'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
+
+ROOT_URL = "http://localhost:8000"

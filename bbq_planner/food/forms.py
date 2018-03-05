@@ -8,7 +8,7 @@ class FoodForm(forms.Form):
         fields = ['source', 'food_type']
 
 
-class FoodForm(forms.Form):
+class FoodOrderForm(forms.Form):
     class Meta:
         model = FoodOrder
         fields = ['food', 'number']

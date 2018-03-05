@@ -70,12 +70,6 @@ class TestEventAttendeeResource(TestCase):
         self.food_chicken = FoodFactory(food_type="Chicken")
         self.food_chicken.save()
 
-        #self.food_order_1 = FoodOrderFactory(food = self.food_chicken)
-        #self.food_order_1.save()
-
-        #self.food_order_2 = FoodOrderFactory(food = self.food)
-        #self.food_order_2.save()
-
         self.event = EventFactory(organizer = self.user)
         self.event.save()
         self.event.food_types.add(self.food)
@@ -83,15 +77,6 @@ class TestEventAttendeeResource(TestCase):
 
         self.event_date =  str(self.event.event_date)
 
-        #self.attendee = AttendeeFactory()
-        #self.attendee.save()
-
-        #self.event_attendee = EventAttendeeFactory(event = self.event,
-        #                                        attendee = self.attendee)
-        #self.event_attendee.save()
-
-        #self.event_attendee.food_orders.add(self.food_order_1)
-        #self.event_attendee.food_orders.add(self.food_order_2)
         self.data = {
             'first_name' : 'Pouya',
             'last_name' : 'Samadi Khah',
@@ -101,13 +86,12 @@ class TestEventAttendeeResource(TestCase):
             }
 
 
-
     #TODO update the successfully test
     def test_post_successfully_created_attendee(self):
         response = self.client.post(
           f"/user/attend/{self.event_date }/{self.event.name}",
           json.dumps(self.data), content_type='application/json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 302)
 
     def test_post_invalid_format_guests(self):
         self.data['number_of_guests'] = 'invalid'

@@ -40,7 +40,7 @@ class TestEventItemResource(TestCase):
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 302)
 
     def test_post_not_logged_in_created_event(self):
 
