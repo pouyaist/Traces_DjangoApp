@@ -13,6 +13,7 @@
            <th>Number of Attendees</th>
            <th>url</th>
            <th>Food types</th>
+           <th>Food orders</th>
          </tr>
        </thead>
        <tbody>
@@ -28,15 +29,26 @@
               <tr>
                 {% for food in event.food_types %}
                 <td>
-                  {{food.food_type}},
+                  {{food.food_type}}&nbsp;
                 </td>
                 {% endfor %}
               </tr>
             </table>
            </td>
-
+           <td>
+              <table>
+                  <tr>
+                    {% for food_type, number in event.food_order_number_list.items %}
+                     <td>
+                       {{food_type}} &nbsp;:&nbsp;{{number}}&nbsp;
+                     </td>
+                    {% endfor %}
+                  </tr>
+                </table>
+           </td>
          </tr>
          {% endfor %}
+
        </tbody>
      </table>
      <!--#TODO change the href found a bug with namespaces in django 2-->

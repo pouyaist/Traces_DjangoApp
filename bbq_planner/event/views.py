@@ -79,7 +79,6 @@ class EventResources(APIView):
         if not events:
             return Response({'events': 'No Events are in the database'}, status=status.HTTP_200_OK)
         events = EventSerializer(events, many=True)
-
         return Response({'events': events.data},  status=status.HTTP_200_OK)
 
 
