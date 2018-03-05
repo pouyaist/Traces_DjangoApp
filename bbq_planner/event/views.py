@@ -35,8 +35,10 @@ class EventItemResources(APIView):
         category = request.data.get('category')
         food_type_ids = request.data.get('food_types')
         string_event_date = request.data.get('event_date')
-        if (event_name or category or string_event_dateor
-                or food_type_ids ) in [[], '', None]:
+        if ((event_name  in [[], '', None]) or
+            (category  in [[], '', None] ) or
+            (string_event_date in ['', None])or
+            (food_type_ids  in [[], '', None])):
             return Response({'failue': 'some of the inputs are empty'},
                         status=status.HTTP_400_BAD_REQUEST)
         try:

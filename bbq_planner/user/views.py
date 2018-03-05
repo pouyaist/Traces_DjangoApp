@@ -39,62 +39,66 @@ class EventAttendeeResources(APIView):
     permission_classes = ()
     authentication_classes = ()
 
-    #TODO validate input
+    #TODO check all the APIs edge cases
+    #TODO create a cutom error page
     @transaction.atomic
     def post(self, request, event_date, event_name):
-        event_date = datetime.strptime(event_date, "%Y-%m-%d").date()
+        try:
+            event_date = datetime.strptime(event_date, "%Y-%m-%d").date()
+        except ValueError:
+             return Response({'failue': 'event date is not well formated'},
+                         status=status.HTTP_400_BAD_REQUEST)
+
         events = Event.objects.filter(name = event_name,
             event_date = event_date)
         if not events.exists():
             return Response({'reason': f"there is no event with the name:\
                      {event_name} and the date {str(event_date)} "},
                       status=status.HTTP_404_NOT_FOUND)
+        #TODO use .create - optimize select_related
         current_event = events[0]
-        event_attendee_serialized = request.data
+
+        attendee_first_name = request.data.get('first_name')
+        attendee_last_name = request.data.get('last_name')
+        number_of_guests = request.data.get('number_of_guests')
+
+        foods  = current_event.food_types.all()
+        food_list = {}
+
+        food_types = foods.values_list('food_type', flat=True)
+
+        for key, value in request.data.items():
+            if (key  in food_types) and int(value) > 0:
+                food_list[key] = int(value)
+
+        if ((attendee_first_name in [[], '', None, {}])
+            or (attendee_last_name in [[], '', None, {}])
+            or (food_list in [[], '', None, {}])):
+            return Response({'failue': 'some of the inputs are empty'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
         food_orders = []
-        if not event_attendee_serialized['food_orders']:
-            return Response({"reason": "empty food orders"},
-                    status=status.HTTP_412_PRECONDITION_FAILED)
-        for food_order in event_attendee_serialized['food_orders']:
-            number = food_order['number']
-            if not food_order['food']:
-                return Response({"reason": "empty food item"},
-                        status=status.HTTP_412_PRECONDITION_FAILED)
-            food_source = food_order['food']['source']
-            food_type = food_order['food']['food_type']
-            food = Food.objects.filter(source = food_source,
-                                      food_type = food_type)
-            if not food.exists():
-                return Response({"reason": f"there is not food type"
-                 " with {food_type} and {food_source}"},
-                status=status.HTTP_412_PRECONDITION_FAILED)
-            #TODO change the 412 to 400
-            food = food[0]
-            if food not in current_event.food_types.all():
-                return Response({"reason": f"there is not food type"
-                 " with {food_type} and {food_source}"},
-                    status=status.HTTP_412_PRECONDITION_FAILED)
-            food_order = FoodOrder(food = food, number = number)
+
+        for food_type, number in food_list.items():
+            food_order = FoodOrder(food = foods.get(food_type=food_type),
+                                number = number)
             food_order.save()
             food_orders.append(food_order)
         try:
             attendee, _ = Attendee.objects.get_or_create(
-                first_name = event_attendee_serialized['attendee']['first_name'],
-                last_name = event_attendee_serialized['attendee']['last_name'])
+                first_name = attendee_first_name,
+                last_name = attendee_last_name)
         except ValueError:
             return Response({"reason": "attendee format is wrong"},
-                    status=status.HTTP_412_PRECONDITION_FAILED)
+                    status=status.HTTP_400_BAD_REQUEST)
         try:
             event_attendee = EventAttendee(event = current_event,
-                attendee = attendee,
-                number_of_guests = event_attendee_serialized['number_of_guests'])
+                attendee = attendee, number_of_guests = number_of_guests)
             event_attendee.save()
         except ValueError:
             return Response({"reason": "event_attendee format is wrong"},
-                    status=status.HTTP_412_PRECONDITION_FAILED)
+                    status=status.HTTP_400_BAD_REQUEST)
 
-        #TODO is there anyway to do it better
         for food_order in food_orders:
             event_attendee.food_orders.add(food_order)
 

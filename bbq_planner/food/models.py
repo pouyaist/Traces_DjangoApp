@@ -4,13 +4,12 @@ from django.db import models
 class Food(models.Model):
     id = models.AutoField(primary_key=True)
     source = models.CharField(max_length=200, default= "animal")
-    food_type = models.CharField(max_length=200, default = "beef")
+    food_type = models.CharField(max_length=200, default = "beef", unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'food'
-        unique_together = ("source", "food_type")
 
     def save(self, *args, **kwargs):
         self.source = self.source.lower()

@@ -44,7 +44,8 @@
                      <div class="col-sm-6">
                          <div class="well">
                             <!--#TODO fix the url-->
-                             <form name="eventAttendeeForm" method="post" action="http://localhost:8000/user/attend/2018-03-22/Pouya%20Samadikhah">
+                            <!--#TODO do lots of CSS-->
+                             <form name="eventAttendeeForm" method="post" action="http://localhost:8000/user/attend/2018-03-31/helloooooooooo">
                                    {% csrf_token %}
                                    <div class="form-pano">
                                        <label class="control-label">Fist name</label>
@@ -64,9 +65,9 @@
                                    {% for food in event.food_types %}
                                      <div class="form-pano">
                                          <label class="control-label">
-                                           <input type="checkbox" id="{{food.food_type}}" name ="{{food.food_type}}">{{food.food_type}}
+                                           Number of {{food.food_type}} items
                                            <input type="number" class="form-control"
-                                              id="orders_number" placeholder="0" name ="orders_number">
+                                              id="{{food.food_type}}" placeholder="0" name ="{{food.food_type}}">
                                          </label>
                                      </div>
                                    {% endfor %}

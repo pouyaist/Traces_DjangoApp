@@ -7,6 +7,7 @@ import json
 from user.factories import UserProfileFactory, UserAuthFactory, AttendeeFactory
 from event.factories import EventFactory, EventAttendeeFactory
 from food.factories import FoodFactory, FoodOrderFactory
+from food.serializers import FoodSerializer
 
 
 class TestEventItemResource(TestCase):
@@ -18,15 +19,25 @@ class TestEventItemResource(TestCase):
         self.user = UserProfileFactory(user_auth = self.user_auth,
             phone = '0123456789', city = 'Eind')
         self.user.save()
-        self.event = EventFactory(organizer = self.user)
+        self.event = EventFactory.create(organizer = self.user)
         self.event.save()
+
+        self.food = FoodFactory()
+        self.food.save()
+
+        self.food_chicken = FoodFactory(food_type="Chicken")
+        self.food_chicken.save()
+
+        self.event.food_types.add(self.food)
+        self.event.food_types.add(self.food_chicken)
 
     def test_post_successfully_created_event(self):
         self.client.login(username="user", password="pass")
         event = {
         'name': 'Rock and Roll',
         'category': 'BBQ',
-        'event_date': str(date.today())
+        'event_date': str(date.today()),
+        'food_types': [self.food.id, self.food_chicken.id]
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
