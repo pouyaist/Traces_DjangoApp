@@ -16,6 +16,7 @@
                             <form id="eventForm" method="post" action="http://localhost:8000/events/item/"
                                   class="eventForm">
                                 {% csrf_token %}
+                                <!--TODO update food items-->
                                 {% render_form event_serializer %}
                                 <input type="submit" value="Save" class="btn btn-success btn-block"/>
                             </form>

@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from user.models import Attendee
 from user.forms import UserAuthForm, UserExtendForm
-from food.models import Food, FoodOrder
+from food.models import FoodOrder
 from event.models import Event, EventAttendee
 
 def register(request):

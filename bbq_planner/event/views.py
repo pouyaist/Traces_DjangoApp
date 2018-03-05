@@ -8,7 +8,6 @@ from rest_framework.decorators import (api_view,
                             permission_classes, renderer_classes)
 from event.models import Event
 from event.serializers import EventSerializer, CreateEventSerializer
-from user.serializers import AttendeeSerializer
 
 
 class EventTemplateResources(APIView):

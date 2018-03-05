@@ -7,7 +7,6 @@ import json
 from user.factories import UserProfileFactory, UserAuthFactory, AttendeeFactory
 from event.factories import EventFactory, EventAttendeeFactory
 from food.factories import FoodFactory, FoodOrderFactory
-from food.serializers import FoodSerializer
 
 
 class TestEventItemResource(TestCase):

@@ -1,10 +1,9 @@
 import json
 from django.test import TestCase
-from user.factories import UserProfileFactory, UserAuthFactory, AttendeeFactory
+from user.factories import UserAuthFactory, UserProfileFactory
 from django.test.client import Client, RequestFactory
-from food.factories import FoodOrderFactory, FoodFactory
-from event.factories import EventFactory, EventAttendeeFactory
-from event.serializers import EventAttendeeSerializer
+from food.factories import FoodFactory
+from event.factories import EventFactory
 
 
 class TestRegister(TestCase):
