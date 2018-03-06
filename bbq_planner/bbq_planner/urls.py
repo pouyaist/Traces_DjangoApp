@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-#TODO bug in new django when trying to use namespace
 urlpatterns = [
     path('', include('home.urls')),
     path('admin/', admin.site.urls),

@@ -19,7 +19,7 @@ class EventTemplateResources(APIView):
 
     def get(self, request):
         event_serializer = CreateEventSerializer()
-        #TODO found a bug in django rest framework for nested serializers
+        #BUG found a bug in django rest framework for nested serializers send food name
         return Response({'event_serializer': event_serializer},
           template_name = 'events/create_event.html', status=status.HTTP_200_OK)
 
@@ -56,7 +56,6 @@ class EventItemResources(APIView):
             return Response({'failue': 'event is already created'},
                         status=status.HTTP_400_BAD_REQUEST)
 
-        #TODO update static url
         event_name_url = '%20'.join(event_name.split(' '))
         url = settings.ROOT_URL + f"/events/item/{string_event_date}/{event_name_url}"
         event = Event(name = event_name, category = category, url = url,
