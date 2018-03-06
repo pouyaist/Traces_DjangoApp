@@ -39,8 +39,6 @@ class EventAttendeeResources(APIView):
     permission_classes = ()
     authentication_classes = ()
 
-    #TODO check all the APIs edge cases
-    #TODO create a cutom error page
     @transaction.atomic
     def post(self, request, event_date, event_name):
         try:

@@ -1,7 +1,8 @@
 import json
+from datetime import timedelta
 from django.test import TestCase
-from user.factories import UserAuthFactory, UserProfileFactory
 from django.test.client import Client, RequestFactory
+from user.factories import UserAuthFactory, UserProfileFactory
 from food.factories import FoodFactory
 from event.factories import EventFactory
 
@@ -93,8 +94,35 @@ class TestEventAttendeeResource(TestCase):
           json.dumps(self.data), content_type='application/json')
         self.assertEqual(response.status_code, 302)
 
+    def test_post_invalid_event_date(self):
+        event_date = str(self.event.event_date - timedelta(days = -1))
+        response = self.client.post(
+          f"/user/attend/{event_date}/{self.event.name}",
+          json.dumps(self.data), content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_post_invalid_event_name(self):
+        response = self.client.post(
+          f"/user/attend/{self.event_date }/wrong",
+          json.dumps(self.data), content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
     def test_post_invalid_format_guests(self):
         self.data['number_of_guests'] = 'invalid'
+        response = self.client.post(
+          f"/user/attend/{self.event_date }/{self.event.name}",
+          json.dumps(self.data), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_invalid_format_first_name(self):
+        self.data['first_name'] = None
+        response = self.client.post(
+          f"/user/attend/{self.event_date }/{self.event.name}",
+          json.dumps(self.data), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_invalid_format_last_name(self):
+        self.data['last_name'] = None
         response = self.client.post(
           f"/user/attend/{self.event_date }/{self.event.name}",
           json.dumps(self.data), content_type='application/json')
