@@ -1,6 +1,5 @@
 {% extends "includes/base.html" %}
 {% load staticfiles %}
-
 {% block content %}
 <div class="container-fluid" style="min-height: 95%">
     {% include 'includes/home_head.html' %}
@@ -11,9 +10,9 @@
            <th>Organizer</th>
            <th>Category</th>
            <th>Number of Attendees</th>
-           <th>url</th>
            <th>Food types</th>
            <th>Food orders</th>
+           <th>url</th>
          </tr>
        </thead>
        <tbody>
@@ -23,7 +22,6 @@
            <td>{{ event.organizer_name|safe }}</td>
            <td>{{ event.category|safe }}</td>
            <td>{{ event.number_of_attendees|safe }}</td>
-           <td>{{ event.url|safe }}</td>
            <td>
              <table>
               <tr>
@@ -46,6 +44,7 @@
                   </tr>
                 </table>
            </td>
+           <td>{{ event.url|safe }}</td>
          </tr>
          {% endfor %}
 

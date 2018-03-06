@@ -2,7 +2,7 @@ from django.urls import path, re_path
 from event.views import (EventItemResources, EventInstanceResources,
                         EventResources, EventTemplateResources)
 
-#TODO optimize urls and resources
+
 urlpatterns = [
     path('', EventResources.as_view(), name='event_list'),
     path('item/create/', EventTemplateResources.as_view(), name='get_event_template'),
