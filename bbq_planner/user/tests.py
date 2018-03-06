@@ -86,8 +86,6 @@ class TestEventAttendeeResource(TestCase):
             'pork': '5'
             }
 
-
-    #TODO update the successfully test
     def test_post_successfully_created_attendee(self):
         response = self.client.post(
           f"/user/attend/{self.event_date }/{self.event.name}",

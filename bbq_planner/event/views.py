@@ -19,7 +19,7 @@ class EventTemplateResources(APIView):
 
     def get(self, request):
         event_serializer = CreateEventSerializer()
-        #BUG found a bug in django rest framework for nested serializers send food name
+        #TODO change this
         return Response({'event_serializer': event_serializer},
           template_name = 'events/create_event.html', status=status.HTTP_200_OK)
 
@@ -55,7 +55,7 @@ class EventItemResources(APIView):
                                 event_date = event_date).exists():
             return Response({'failue': 'event is already created'},
                         status=status.HTTP_400_BAD_REQUEST)
-    
+
         food_ids = Food.objects.all().values_list('id', flat = True)
         for food_type_id in food_type_ids:
             if food_type_id not in food_ids:
