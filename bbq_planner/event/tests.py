@@ -75,6 +75,54 @@ class TestEventItemResource(TestCase):
          content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
+    def test_post_wrong_name(self):
+        self.client.login(username="user", password="pass")
+        event = {
+        'name': '',
+        'category': 'BBQ',
+        'event_date': str(date.today()),
+        'food_types': [self.food.id, self.food_chicken.id]
+        }
+        response = self.client.post('/events/item/', json.dumps(event),
+         content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_empty_category(self):
+        self.client.login(username="user", password="pass")
+        event = {
+        'name': 'Rock and Roll',
+        'category': None,
+        'event_date': str(date.today()),
+        'food_types': [self.food.id, self.food_chicken.id]
+        }
+        response = self.client.post('/events/item/', json.dumps(event),
+         content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_wrong_food_types(self):
+        self.client.login(username="user", password="pass")
+        event = {
+        'name': 'Rock and Roll',
+        'category': 'BBQ',
+        'event_date': str(date.today()),
+        'food_types': [123, 12]
+        }
+        response = self.client.post('/events/item/', json.dumps(event),
+         content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_empty_date(self):
+        self.client.login(username="user", password="pass")
+        event = {
+        'name': 'Rock and Roll',
+        'category': 'BBQ',
+        'event_date': None,
+        'food_types': [self.food.id, self.food_chicken.id]
+        }
+        response = self.client.post('/events/item/', json.dumps(event),
+         content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
 
 class TestEventResource(TestCase):
     def setUp(self):

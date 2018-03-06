@@ -10,7 +10,7 @@ from rest_framework.decorators import (api_view,
                             permission_classes, renderer_classes)
 from event.models import Event
 from event.serializers import EventSerializer, CreateEventSerializer
-
+from food.models import Food
 
 class EventTemplateResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -55,7 +55,13 @@ class EventItemResources(APIView):
                                 event_date = event_date).exists():
             return Response({'failue': 'event is already created'},
                         status=status.HTTP_400_BAD_REQUEST)
-
+    
+        food_ids = Food.objects.all().values_list('id', flat = True)
+        for food_type_id in food_type_ids:
+            if food_type_id not in food_ids:
+                return Response({'failue':
+                            f"food id {food_type_id} is not correct"},
+                            status=status.HTTP_400_BAD_REQUEST)
         event_name_url = '%20'.join(event_name.split(' '))
         url = settings.ROOT_URL + f"/events/item/{string_event_date}/{event_name_url}"
         event = Event(name = event_name, category = category, url = url,
