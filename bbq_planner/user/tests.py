@@ -90,7 +90,7 @@ class TestEventAttendeeResource(TestCase):
         response = self.client.post(
           f"/user/attend/{self.event_date }/{self.event.name}",
           json.dumps(self.data), content_type='application/json')
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
     def test_post_invalid_event_date(self):
         event_date = str(self.event.event_date - timedelta(days = -1))
