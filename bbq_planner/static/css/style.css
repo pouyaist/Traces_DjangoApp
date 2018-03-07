@@ -1,20 +1,9 @@
-.jumbotron_panotraces {
-    background: #000 url("../images/panotraces.jpg") repeat scroll center center / cover;
-    color: #70176e;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    text-align: center;
-    width: 100%;
-}
 
 #footer-area {
     padding: 1rem;
     background-color: #efefef;
     text-align: center;
-    position: fixed;
-    bottom: 10px;
-    width: 95%;
+
 }
 
 .list-group a:hover {
