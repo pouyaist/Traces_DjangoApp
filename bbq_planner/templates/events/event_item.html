@@ -40,7 +40,11 @@
               <tr>
                 {% for food in event.food_types %}
                 <td>
-                  {{food.food_type }}&nbsp;&nbsp;
+                  {% if food == event.food_types|last %}
+                    &nbsp;{{food.food_type }}
+                  {% else %}
+                     &nbsp;{{food.food_type }}&nbsp;/
+                  {% endif %}
                 </td>
                 {% endfor %}
               </tr>

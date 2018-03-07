@@ -12,7 +12,8 @@
            <th>Number of Attendees</th>
            <th>Food types</th>
            <th>Food orders</th>
-           <th>url</th>
+           <th>URL</th>
+           <th>Visitors</th>
          </tr>
        </thead>
        <tbody>
@@ -27,7 +28,11 @@
               <tr>
                 {% for food in event.food_types %}
                 <td>
-                  {{food.food_type}}&nbsp;
+                  {% if food == event.food_types|last %}
+                    &nbsp;{{food.food_type }}
+                  {% else %}
+                     &nbsp;{{food.food_type }}&nbsp;/
+                  {% endif %}
                 </td>
                 {% endfor %}
               </tr>
@@ -45,6 +50,21 @@
                 </table>
            </td>
            <td>{{ event.url|safe }}</td>
+           <td>
+              <table>
+                  <tr>
+                    {% for visitor in event.list_of_attendees %}
+                     <td>
+                       {% if visitor == event.list_of_attendees|last %}
+                          {{ visitor }}
+                       {% else %}
+                          {{ visitor }}&nbsp;/&nbsp;
+                       {% endif %}
+                     </td>
+                    {% endfor %}
+                  </tr>
+                </table>
+           </td>
          </tr>
          {% endfor %}
 
