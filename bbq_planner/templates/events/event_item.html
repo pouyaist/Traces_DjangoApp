@@ -15,11 +15,6 @@
               alert("Last Name must be filled out");
               return false;
           }
-          var x = document.forms["eventAttendeeIDForm"]["number_of_guests"].value;
-          if (x == "") {
-              alert("Number of guests  must be filled out");
-              return false;
-          }
       }
     </script>
     <table class="table">
@@ -80,7 +75,7 @@
                                    </div>
                                    <div class="form-pano">
                                        <label class="control-label">Number of guests</label>
-                                       <input type="number" class="form-control" id="number_of_guests" placeholder="0" name ="number_of_guests">
+                                       <input type="number" class="form-control" id="number_of_guests" value="0" name ="number_of_guests" min="0">
                                        <span class="help-block"></span>
                                    </div>
                                    {% for food in event.food_types %}
@@ -88,7 +83,7 @@
                                          <label class="control-label">
                                            Number of {{food.food_type}} items
                                            <input type="number" class="form-control"
-                                              id="{{food.food_type}}" value="0" name ="{{food.food_type}}">
+                                              id="{{food.food_type}}" value="0" name ="{{food.food_type}}" min="0">
                                          </label>
                                      </div>
                                    {% endfor %}
