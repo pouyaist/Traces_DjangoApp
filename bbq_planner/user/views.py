@@ -53,7 +53,7 @@ class EventAttendeeResources(APIView):
             return Response({'reason': f"there is no event with the name:\
                      {event_name} and the date {str(event_date)} "},
                       status=status.HTTP_404_NOT_FOUND)
-        #TODO use .create - optimize select_related
+
         current_event = events[0]
 
         attendee_first_name = request.data.get('first_name')
