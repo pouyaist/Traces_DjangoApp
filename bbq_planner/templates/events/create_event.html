@@ -3,9 +3,25 @@
 {% block content %}
 <div class="container-fluid" style="min-height: 95%">
     {% include 'includes/home_head.html' %}
-    {% if form.errors %}
-    <div class="alert alert-danger">Your data didn't match. Please try again.</div>
-    {% endif %}
+    <script>
+      function validateForm() {
+          var x = document.forms["eventForm"]["name"].value;
+          if (x == "") {
+              alert("Name must be filled out");
+              return false;
+          }
+          var x = document.forms["eventForm"]["event_date"].value;
+          if (x == "") {
+              alert("event date must be filled out");
+              return false;
+          }
+          var x = document.forms["eventForm"]["number_of_guests"].value;
+          if (x == "") {
+              alert("Number of guests  must be filled out");
+              return false;
+          }
+      }
+    </script>
     <div id="login-overlay" class="modal-dialog">
         <div class="login-form">
             <div class="modal-header">
@@ -16,7 +32,7 @@
                     <div class="col-sm-6">
                         <div class="well">
                             <form id="eventForm" method="post" action="/events/item/"
-                                  class="eventForm">
+                                  class="eventForm" onsubmit="return validateForm()">
                                 {% csrf_token %}
                                    <div class="form-pano">
                                        <label class="control-label">{{ event_form.name.label_tag }}</label>

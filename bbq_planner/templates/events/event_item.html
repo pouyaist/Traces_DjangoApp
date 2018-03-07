@@ -3,9 +3,25 @@
 {% block content %}
 <div class="container-fluid" style="min-height: 95%">
     {% include 'includes/home_head.html' %}
-    {% if form.errors %}
-      <div class="alert alert-danger">Your data didn't match. Please try again.</div>
-    {% endif %}
+    <script>
+      function validateForm() {
+          var x = document.forms["eventAttendeeIDForm"]["first_name"].value;
+          if (x == "") {
+              alert("First Name must be filled out");
+              return false;
+          }
+          var x = document.forms["eventAttendeeIDForm"]["last_name"].value;
+          if (x == "") {
+              alert("Last Name must be filled out");
+              return false;
+          }
+          var x = document.forms["eventAttendeeIDForm"]["number_of_guests"].value;
+          if (x == "") {
+              alert("Number of guests  must be filled out");
+              return false;
+          }
+      }
+    </script>}
     <table class="table">
        <thead>
          <tr>
@@ -50,7 +66,7 @@
                          <div class="well">
 
                             <!--#TODO do lots of CSS-->
-                             <form id="eventAttendeeIDForm" method="post" action="/user/attend/{{event.event_date}}/{{event.name}}">
+                             <form name="eventAttendeeIDForm" method="post" action="/user/attend/{{event.event_date}}/{{event.name}}"       onsubmit="return validateForm()">
                                    {% csrf_token %}
                                    <div class="form-pano">
                                        <label class="control-label">Fist name</label>
