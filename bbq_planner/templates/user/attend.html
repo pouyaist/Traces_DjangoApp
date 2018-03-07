@@ -1,0 +1,27 @@
+{% extends "includes/base.html" %}
+{% load staticfiles %}
+{% block css %}
+<link href="{% static 'css/pano.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+<div class="container-fluid" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+</div>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+            <div class="pano-image">
+                <img class="first-slide" src="{% static 'images/bbq.jpg' %}" alt="First slide">
+                <div class="container">
+                    <div class="carousel-caption pano-title">
+                        BBQ Planner
+                    </div >
+                    <div class="pano-quote carousel-caption ">
+                        You are sucessfully registered !!!
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+{% endblock %}

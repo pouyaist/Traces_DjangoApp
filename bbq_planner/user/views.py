@@ -66,7 +66,7 @@ class EventAttendeeResources(APIView):
         food_types = foods.values_list('food_type', flat=True)
 
         for key, value in request.data.items():
-            if (key  in food_types) and int(value) > 0:
+            if (key  in food_types) and (value is not None) and int(value) > 0:
                 food_list[key] = int(value)
 
         if ((attendee_first_name in [[], '', None, {}])
@@ -100,4 +100,4 @@ class EventAttendeeResources(APIView):
         for food_order in food_orders:
             event_attendee.food_orders.add(food_order)
 
-        return redirect('/')
+        return render(request, 'user/attend.html')
