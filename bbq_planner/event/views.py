@@ -89,7 +89,8 @@ class EventResources(APIView):
         if request.user.userprofile is None:
             return Response({'events': 'there is no userprofile'},
                             status=status.HTTP_404_NOT_FOUND)
-        events = Event.objects.filter(organizer_id = request.user.userprofile.id)
+        events = Event.objects.filter(organizer_id =
+                                     request.user.userprofile.id)
         if not events:
             return Response({'events': 'No Events are in the database'},
                             status=status.HTTP_200_OK)

@@ -9,9 +9,11 @@ from event.factories import EventFactory
 
 class TestRegister(TestCase):
     def setUp(self):
-        self.user_auth = UserAuthFactory(username="user", password="pass", email="user@gmail.com")
+        self.user_auth = UserAuthFactory(username="user", password="pass"
+                , email="user@gmail.com")
         self.user_auth.save()
-        self.user = UserProfileFactory(user_auth = self.user_auth, phone = '0123456789', city = 'Eind')
+        self.user = UserProfileFactory(user_auth = self.user_auth
+                , phone = '0123456789', city = 'Eind')
         self.user.save()
         self.client = Client()
         self.factory = RequestFactory()

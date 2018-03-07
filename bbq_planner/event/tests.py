@@ -220,7 +220,8 @@ class TestEventInstanceResource(TestCase):
 
     def test_get_wrong_date_event(self):
         event_date = str(self.event.event_date - timedelta(days = 10))
-        response = self.client.get(f"/events/item/{event_date}/{self.event.name}")
+        response = self.client.get("/events/item/"
+                                f"{event_date}/{self.event.name}")
         self.assertEqual(response.status_code, 404)
 
     def test_get_wrong_event_name(self):
@@ -230,7 +231,8 @@ class TestEventInstanceResource(TestCase):
 
     def test_get_successfully_event(self):
         event_date = str(self.event.event_date)
-        response = self.client.get(f"/events/item/{event_date}/{self.event.name}")
+        response = self.client.get("/events/item/"
+                                f"{event_date}/{self.event.name}")
         self.assertEqual(response.status_code, 200)
         data = response.data.get('event')
         self.assertEqual(data['name'], self.event.name)
