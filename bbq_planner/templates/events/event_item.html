@@ -40,7 +40,7 @@
               <tr>
                 {% for food in event.food_types %}
                 <td>
-                  {{food.food_type}}&nbsp;&nbsp;
+                  {{food.food_type }}&nbsp;&nbsp;
                 </td>
                 {% endfor %}
               </tr>
@@ -81,7 +81,7 @@
                                    {% for food in event.food_types %}
                                      <div class="form-pano">
                                          <label class="control-label">
-                                           Number of {{food.food_type}} items
+                                           Number of {{ food.food_type }} items
                                            <input type="number" class="form-control"
                                               id="{{food.food_type}}" value="0" name ="{{food.food_type}}" min="0">
                                          </label>
