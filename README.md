@@ -64,15 +64,20 @@ Now that you're more familiar with your Bitbucket repository, go ahead and add a
 `python manage.py test --parallel`
 
 
+##Remove all unused imports:
+
+find . -name "*.py"|grep -v migrations|xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+
+
 ## Run from Docker container:
 
 Build container:
 
-  `sudo docker build --no-cache=true -t bbq .`
+  `sudo docker build --no-cache=true -t dockerizing-bbqplanner` .`
 
 Run container shell:
 
-  `sudo docker run --rm -p 5000:8000 -it bbq sh`
+  `sudo docker run -it -p 8000:8000 dockerizing-bbqplanner`
 
   flags:
 
@@ -100,8 +105,4 @@ Check available docker images on your machine:
 
 Remove docker image:
 
-  `sudo docker rmi [image ID]`
-
-
-
-find . -name '*.py'|grep -v migrations|xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+  `sudo docker rmi -f [image ID]`

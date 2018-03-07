@@ -23,4 +23,4 @@ COPY . /usr/src/app
 # Uncomment if you want to start the app after you start the container
 # run the command (app)
 CMD ["python", "./app.py"]
-CMD ["./runserver"]
+CMD ["./start.sh"]
