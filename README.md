@@ -40,4 +40,68 @@ Use these steps to clone from SourceTree, our client for using the repository co
 4. Open the directory you just created to see your repository’s files.
 
 Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+
+
+##Install the packages:
+
+`pip install -r requirements`
+
+##Update the requirements:
+
+`pip freeze -l > requirements`
+
+##Debug python:
+
+ `import pdb; pdb.set_trace();`
+
+##Run the unit the test:
+
+`python manage.py test`
+
+##Run tests in parallel:
+
+`python manage.py test --parallel`
+
+
+## Run from Docker container:
+
+Build container:
+
+  `sudo docker build --no-cache=true -t bbq .`
+
+Run container shell:
+
+  `sudo docker run --rm -p 5000:8000 -it bbq sh`
+
+  flags:
+
+    `-p`: forwards local port 5000 to containers port 8000:
+
+    `--rm`: removes container after you stop it
+
+    `-it`: runs interactive tty in the container
+
+Show all containers (check container name):
+
+  `sudo docker ps -a`
+
+Stop container:
+
+  `sudo docker stop [container name]`
+
+Kill container:
+
+  `sudo docker kill [container name]`
+
+Check available docker images on your machine:
+
+  `sudo docker images`
+
+Remove docker image:
+
+  `sudo docker rmi [image ID]`
+
+
+
 find . -name '*.py'|grep -v migrations|xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
