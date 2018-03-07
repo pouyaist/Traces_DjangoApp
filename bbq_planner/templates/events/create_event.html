@@ -1,0 +1,72 @@
+{% extends "includes/base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+    <script>
+      function validateForm() {
+          var x = document.forms["eventForm"]["name"].value;
+          if (x == "") {
+              alert("Name must be filled out");
+              return false;
+          }
+          var x = document.forms["eventForm"]["event_date"].value;
+          if (x == "") {
+              alert("event date must be filled out");
+              return false;
+          }
+          var x = document.forms["eventForm"]["category"].value;
+          if (x == "") {
+              alert("category must be filled out");
+              return false;
+          }
+      }
+    </script>
+    <div id="login-overlay" class="modal-dialog">
+        <div class="login-form">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Create an unforgettable BBQ event</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="well">
+                            <form id="eventForm" method="post" action="/events/item/"
+                                  class="eventForm" onsubmit="return validateForm()">
+                                {% csrf_token %}
+                                   <div class="form-pano">
+                                       <label class="control-label">{{ event_form.name.label_tag }}</label>
+                                       {{ event_form.name }}
+                                       <span class="help-block"></span>
+                                   </div>
+                                   <div class="form-pano">
+                                       <label class="control-label">{{ event_form.category.label_tag}}</label>
+                                       {{ event_form.category }}
+                                       <span class="help-block"></span>
+                                   </div>
+                                   <div class="form-pano">
+                                       <label class="control-label">{{ event_form.event_date.label_tag}}</label>
+                                       <input type="date" class="form-control" id="event_date" name ="event_date">
+                                       <span class="help-block"></span>
+                                   </div>
+                                    {% for food_type in food_types %}
+                                     <div class="form-pano">
+                                         <label class="control-label">
+                                           {{ food_type }}
+                                           <input type="checkbox" class="form-control"
+                                              id="{{food_type}}" placeholder="0" name ="{{food_type}}">
+                                         </label>
+                                     </div>
+                                   {% endfor %}
+                                <input type="submit" value="Save" class="btn btn-success btn-block"/>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</div>
+{% endblock %}
