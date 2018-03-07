@@ -1,6 +1,5 @@
 {% extends "includes/base.html" %}
 {% load staticfiles %}
-{% load rest_framework %}
 {% block content %}
 <div class="container-fluid" style="min-height: 95%">
     {% include 'includes/home_head.html' %}
@@ -16,8 +15,30 @@
                             <form id="eventForm" method="post" action="/events/item/"
                                   class="eventForm">
                                 {% csrf_token %}
-                                <!--TODO update food items-->
-                                {% render_form event_serializer %}
+                                   <div class="form-pano">
+                                       <label class="control-label">{{ event_form.name.label_tag }}</label>
+                                       {{ event_form.name}}
+                                       <span class="help-block"></span>
+                                   </div>
+                                   <div class="form-pano">
+                                       <label class="control-label">{{ event_form.category.label_tag}}</label>
+                                       {{ event_form.category}}
+                                       <span class="help-block"></span>
+                                   </div>
+                                   <div class="form-pano">
+                                       <label class="control-label">{{ event_form.event_date.label_tag}}</label>
+                                       <input type="date" class="form-control" id="event_date" name ="event_date">
+                                       <span class="help-block"></span>
+                                   </div>
+                                    {% for food_type in food_types %}
+                                     <div class="form-pano">
+                                         <label class="control-label">
+                                           {{food_type}}
+                                           <input type="checkbox" class="form-control"
+                                              id="{{food_type}}" placeholder="0" name ="{{food_type}}">
+                                         </label>
+                                     </div>
+                                   {% endfor %}
                                 <input type="submit" value="Save" class="btn btn-success btn-block"/>
                             </form>
                         </div>

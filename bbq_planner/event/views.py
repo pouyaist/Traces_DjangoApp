@@ -10,6 +10,7 @@ from rest_framework.decorators import (api_view,
                             permission_classes, renderer_classes)
 from event.models import Event
 from event.serializers import EventSerializer, CreateEventSerializer
+from event.forms import EventForm
 from food.models import Food
 
 class EventTemplateResources(APIView):
@@ -18,9 +19,10 @@ class EventTemplateResources(APIView):
     template_name = 'events/create_event.html'
 
     def get(self, request):
-        event_serializer = CreateEventSerializer()
+        event_form = EventForm()
+        food_types = Food.objects.all().values_list('food_type', flat = True)
         #TODO change this
-        return Response({'event_serializer': event_serializer},
+        return Response({'event_form': event_form, 'food_types': food_types},
           template_name = 'events/create_event.html', status=status.HTTP_200_OK)
 
 
@@ -32,14 +34,19 @@ class EventItemResources(APIView):
     @transaction.atomic
     def post(self, request):
         user = request.user
+
         event_name = request.data.get('name')
         category = request.data.get('category')
-        food_type_ids = request.data.get('food_types')
+        food_types = []
+        for food_type, food_type_boolean in request.data.items():
+            if food_type_boolean == 'on':
+                food_types.append(food_type)
+
         string_event_date = request.data.get('event_date')
         if ((event_name  in [[], '', None]) or
             (category  in [[], '', None] ) or
             (string_event_date in ['', None])or
-            (food_type_ids  in [[], '', None])):
+            (food_types == [])):
             return Response({'failue': 'some of the inputs are empty'},
                         status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -55,20 +62,21 @@ class EventItemResources(APIView):
                                 event_date = event_date).exists():
             return Response({'failue': 'event is already created'},
                         status=status.HTTP_400_BAD_REQUEST)
-
-        food_ids = Food.objects.all().values_list('id', flat = True)
-        for food_type_id in food_type_ids:
-            if food_type_id not in food_ids:
+        #use cache for object fetching
+        foods = Food.objects.all()
+        food_types_list = foods.values_list('food_type', flat = True)
+        for food_type in food_types:
+            if food_type not in food_types_list:
                 return Response({'failue':
-                            f"food id {food_type_id} is not correct"},
+                            f"food id {food_type} is not correct"},
                             status=status.HTTP_400_BAD_REQUEST)
         event_name_url = '%20'.join(event_name.split(' '))
         url = settings.ROOT_URL + f"/events/item/{string_event_date}/{event_name_url}"
         event = Event(name = event_name, category = category, url = url,
                 event_date = event_date, organizer = user.userprofile)
         event.save()
-        for food_type_id in food_type_ids:
-            event.food_types.add(food_type_id)
+        for food_type in food_types:
+            event.food_types.add(foods.get(food_type = food_type))
         return redirect('/events/')
 
 

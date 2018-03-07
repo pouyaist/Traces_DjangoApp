@@ -27,8 +27,8 @@ class TestEventItemResource(TestCase):
         self.food_chicken = FoodFactory(food_type="Chicken")
         self.food_chicken.save()
 
-        self.event.food_types.add(self.food)
-        self.event.food_types.add(self.food_chicken)
+        #self.event.food_types.add(self.food)
+        #self.event.food_types.add(self.food_chicken)
 
     def test_post_successfully_created_event(self):
         self.client.login(username="user", password="pass")
@@ -36,7 +36,8 @@ class TestEventItemResource(TestCase):
         'name': 'Rock and Roll',
         'category': 'BBQ',
         'event_date': str(date.today()),
-        'food_types': [self.food.id, self.food_chicken.id]
+        'chicken': 'on',
+        'pork': 'on'
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
@@ -47,7 +48,9 @@ class TestEventItemResource(TestCase):
         event = {
         'name': 'Rock and Roll',
         'category': 'BBQ',
-        'event_date': str(date.today())
+        'event_date': str(date.today()),
+        'chicken': 'on',
+        'pork': 'on'
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
@@ -58,7 +61,9 @@ class TestEventItemResource(TestCase):
         event = {
         'name': self.event.name,
         'category': self.event.category,
-        'event_date': str(self.event.event_date)
+        'event_date': str(self.event.event_date),
+        'chicken': 'on',
+        'pork': 'on'
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
@@ -69,7 +74,9 @@ class TestEventItemResource(TestCase):
         event = {
         'name': 'Rock and Roll',
         'category': 'BBQ',
-        'event_date': str(date.today() - timedelta(days=1))
+        'event_date': str(date.today() - timedelta(days=1)),
+        'chicken': 'on',
+        'pork': 'on'
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
@@ -81,7 +88,8 @@ class TestEventItemResource(TestCase):
         'name': '',
         'category': 'BBQ',
         'event_date': str(date.today()),
-        'food_types': [self.food.id, self.food_chicken.id]
+        'chicken': 'on',
+        'pork': 'on'
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
@@ -93,19 +101,31 @@ class TestEventItemResource(TestCase):
         'name': 'Rock and Roll',
         'category': None,
         'event_date': str(date.today()),
-        'food_types': [self.food.id, self.food_chicken.id]
+        'chicken': 'on',
+        'pork': 'on'
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
-    def test_post_wrong_food_types(self):
+    def test_post_empty_food_types(self):
         self.client.login(username="user", password="pass")
         event = {
         'name': 'Rock and Roll',
         'category': 'BBQ',
         'event_date': str(date.today()),
-        'food_types': [123, 12]
+        'noodels': 'on'
+        }
+        response = self.client.post('/events/item/', json.dumps(event),
+         content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_empty_food_types(self):
+        self.client.login(username="user", password="pass")
+        event = {
+        'name': 'Rock and Roll',
+        'category': 'BBQ',
+        'event_date': str(date.today()),
         }
         response = self.client.post('/events/item/', json.dumps(event),
          content_type='application/json')
