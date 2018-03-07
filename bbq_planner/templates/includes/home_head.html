@@ -21,17 +21,19 @@
                     {% endif %}
                     <ul class="nav navbar-nav navbar-right">
                         {% if not user.is_authenticated %}
-                        <li class="{% if request.path == '/accounts/login/' %}active{% endif %}"><a href="{% url 'login'%}">Sign In</a></li>
+                        <li class="{% if request.path == '/user/login/' %}active{% endif %}"><a href="{% url 'login'%}">Sign In</a></li>
                         {% else %}
                         <li class="dropdown">
 
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-haspopup="true" aria-expanded="false">Hello
+                               <!-- TODO fix session issue
                                 {% if user.first_name == "" %}
                                 {{ user.username }}
                                 {% else %}
                                 {{ user.first_name }}
                                 {% endif %}
+                                -->
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="/user/logout">Logout</a></li>

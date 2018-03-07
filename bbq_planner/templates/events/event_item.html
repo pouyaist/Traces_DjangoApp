@@ -3,6 +3,9 @@
 {% block content %}
 <div class="container-fluid" style="min-height: 95%">
     {% include 'includes/home_head.html' %}
+    {% if form.errors %}
+      <div class="alert alert-danger">Your data didn't match. Please try again.</div>
+    {% endif %}
     <table class="table">
        <thead>
          <tr>
@@ -22,15 +25,17 @@
            <td>{{ event.number_of_attendees|safe }}</td>
            <td>{{ event.event_date|safe }}</td>
            <td>
-             <tr>
-               <th>Food Types</th>
-             </tr>
-              {% for food in event.food_types %}
-              <td>
-                {{food.food_type}}
-              </td>
-              {% endfor %}
+            <table>
+              <tr>
+                {% for food in event.food_types %}
+                <td>
+                  {{food.food_type}}&nbsp;&nbsp;
+                </td>
+                {% endfor %}
+              </tr>
+            </table>
            </td>
+
          </tr>
        </tbody>
      </table>

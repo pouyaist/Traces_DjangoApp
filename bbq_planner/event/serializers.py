@@ -43,13 +43,6 @@ class EventSerializer(serializers.ModelSerializer):
         return food_order_number_list
 
 
-class CreateEventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-        fields = ('id', 'name',
-         'category', 'event_date', 'food_types'
-        )
-
 
 class EventAttendeeSerializer(serializers.ModelSerializer):
     event = EventSerializer()

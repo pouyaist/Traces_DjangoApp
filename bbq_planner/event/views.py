@@ -9,9 +9,10 @@ from rest_framework import permissions, status
 from rest_framework.decorators import (api_view,
                             permission_classes, renderer_classes)
 from event.models import Event
-from event.serializers import EventSerializer, CreateEventSerializer
+from event.serializers import EventSerializer
 from event.forms import EventForm
 from food.models import Food
+
 
 class EventTemplateResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -21,7 +22,6 @@ class EventTemplateResources(APIView):
     def get(self, request):
         event_form = EventForm()
         food_types = Food.objects.all().values_list('food_type', flat = True)
-        #TODO change this
         return Response({'event_form': event_form, 'food_types': food_types},
           template_name = 'events/create_event.html', status=status.HTTP_200_OK)
 
