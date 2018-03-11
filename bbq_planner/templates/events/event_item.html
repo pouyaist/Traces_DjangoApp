@@ -1,0 +1,107 @@
+{% extends "includes/base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid" style="min-height: 95%">
+    {% include 'includes/home_head.html' %}
+    <script>
+      function validateForm() {
+          var x = document.forms["eventAttendeeIDForm"]["first_name"].value;
+          if (x == "") {
+              alert("First Name must be filled out");
+              return false;
+          }
+          var x = document.forms["eventAttendeeIDForm"]["last_name"].value;
+          if (x == "") {
+              alert("Last Name must be filled out");
+              return false;
+          }
+      }
+    </script>
+    <table class="table">
+       <thead>
+         <tr>
+           <th>Event name</th>
+           <th>Organizer</th>
+           <th>Category</th>
+           <th>Number of Attendees</th>
+           <th>Event date</th>
+           <th>Food Types</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <td>{{ event.name|safe }}</td>
+           <td>{{ event.organizer_name|safe }}</td>
+           <td>{{ event.category|safe }}</td>
+           <td>{{ event.number_of_attendees|safe }}</td>
+           <td>{{ event.event_date|safe }}</td>
+           <td>
+            <table>
+              <tr>
+                {% for food in event.food_types %}
+                <td>
+                  {% if food == event.food_types|last %}
+                    &nbsp;{{food.food_type }}
+                  {% else %}
+                     &nbsp;{{food.food_type }}&nbsp;/
+                  {% endif %}
+                </td>
+                {% endfor %}
+              </tr>
+            </table>
+           </td>
+
+         </tr>
+       </tbody>
+     </table>
+     <div id="login-overlay" class="modal-dialog">
+         <div class="login-form">
+             <div class="modal-header">
+                 <h4 class="modal-title" id="myModalLabel">Just one click away to have an outstanding memory</h4>
+             </div>
+             <div class="modal-body">
+                 <div class="row">
+                     <div class="col-sm-6">
+                         <div class="well">
+
+                            <!--#TODO do lots of CSS-->
+                             <form name="eventAttendeeIDForm" method="post" action="/user/attend/{{event.event_date}}/{{event.name}}"       onsubmit="return validateForm()">
+                                   {% csrf_token %}
+                                   <div class="form-pano">
+                                       <label class="control-label">Fist name</label>
+                                       <input type="text" class="form-control" id="first_name" placeholder="Enter first name" name="first_name">
+                                       <span class="help-block"></span>
+                                   </div>
+                                   <div class="form-pano">
+                                       <label class="control-label">Last name</label>
+                                       <input type="text" class="form-control" id="last_name" placeholder="Enter last name" name="last_name">
+                                       <span class="help-block"></span>
+                                   </div>
+                                   <div class="form-pano">
+                                       <label class="control-label">Number of guests</label>
+                                       <input type="number" class="form-control" id="number_of_guests" value="0" name ="number_of_guests" min="0">
+                                       <span class="help-block"></span>
+                                   </div>
+                                   {% for food in event.food_types %}
+                                     <div class="form-pano">
+                                         <label class="control-label">
+                                           Number of {{ food.food_type }} items
+                                           <input type="number" class="form-control"
+                                              id="{{food.food_type}}" value="0" name ="{{food.food_type}}" min="0">
+                                         </label>
+                                     </div>
+                                   {% endfor %}
+                                 <input type="submit" value="Attend" class="btn btn-success btn-block"/>
+                             </form>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+         </div>
+     </div>
+
+    {% include 'includes/footer.html' %}
+</div>
+
+{% endblock %}

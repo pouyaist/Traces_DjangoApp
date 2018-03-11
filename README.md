@@ -1,6 +1,3 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
-
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
 
 *We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
 
@@ -43,3 +40,69 @@ Use these steps to clone from SourceTree, our client for using the repository co
 4. Open the directory you just created to see your repository’s files.
 
 Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+
+
+##Install the packages:
+
+`pip install -r requirements`
+
+##Update the requirements:
+
+`pip freeze -l > requirements`
+
+##Debug python:
+
+ `import pdb; pdb.set_trace();`
+
+##Run the unit the test:
+
+`python manage.py test`
+
+##Run tests in parallel:
+
+`python manage.py test --parallel`
+
+
+##Remove all unused imports:
+
+find . -name "*.py"|grep -v migrations|xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+
+
+## Run from Docker container:
+
+Build container:
+
+  `sudo docker build --no-cache=true -t dockerizing-bbqplanner` .`
+
+Run container shell:
+
+  `sudo docker run -it -p 8000:8000 dockerizing-bbqplanner`
+
+  flags:
+
+    `-p`: forwards local port 5000 to containers port 8000:
+
+    `--rm`: removes container after you stop it
+
+    `-it`: runs interactive tty in the container
+
+Show all containers (check container name):
+
+  `sudo docker ps -a`
+
+Stop container:
+
+  `sudo docker stop [container name]`
+
+Kill container:
+
+  `sudo docker kill [container name]`
+
+Check available docker images on your machine:
+
+  `sudo docker images`
+
+Remove docker image:
+
+  `sudo docker rmi -f [image ID]`
