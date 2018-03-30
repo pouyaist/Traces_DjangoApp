@@ -9,6 +9,7 @@ from rest_framework import permissions, status, authentication
 from event.models import Event
 from event.serializers import EventSerializer
 from user.models import UserProfile
+from django.conf import settings
 
 
 
@@ -21,6 +22,9 @@ class EventItemResources(APIView):
         event_name = request.data.get('name')
         category = request.data.get('category')
         string_event_date = request.data.get('event_date')
+        if (not string_event_date) or (not category) or (not event_name):
+            return Response({'failue': " one or more of the required fields are empty"},
+                status=status.HTTP_400_BAD_REQUEST)
         event_date = datetime.strptime(string_event_date, "%Y-%m-%d").date()
         if event_date < date.today():
             return Response({'failue': " event date is for the past"},
@@ -32,7 +36,7 @@ class EventItemResources(APIView):
                         status=status.HTTP_400_BAD_REQUEST)
 
         #TODO update static url
-        url = "http://localhost:8000" + f"/item/{string_event_date}/{event_name}"
+        url = settings.WEBSITE_ADDRESS + f"/event/item/{string_event_date}/{event_name}"
         event = Event(name = event_name, category = category, url = url,
                 event_date = event_date, organizer = user.userprofile)
         event.save()
@@ -45,7 +49,6 @@ class EventResources(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        return Response({'name':'sdsds'}, status=status.HTTP_200_OK)
         if request.user.is_staff:
             return HttpResponseRedirect(redirect_to="/admin/")
         if request.user.userprofile is None:

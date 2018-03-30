@@ -1,7 +1,0 @@
-{
-  "name": "bbq_planner_angjs",
-  "description": "A sample Angular BBQ Planner application",
-  "dependencies": {
-    "express": "^4.16.2"
-  }
-}
