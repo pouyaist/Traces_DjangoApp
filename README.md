@@ -5,7 +5,7 @@
 
 ## Edit a file
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+You will start by editing this README file to learn how to edit a file in Bitbucket.
 
 1. Click **Source** on the left side.
 2. Click the README.md link from the list of files.
